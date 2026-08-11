@@ -11,12 +11,12 @@ import { NewLeadModal } from "./NewLeadModal";
 import { LEAD_STATUSES, LEAD_STATUS_LABELS_UZ, PRIORITIES, PRIORITY_LABELS_UZ, Profile, SellerTier, SELLER_TIER_LABELS_UZ } from "@/lib/types";
 
 const TIER_COLORS: Record<SellerTier, string> = {
-  A: "border-emerald-300 bg-emerald-50 text-emerald-700",
-  B: "border-sky-300 bg-sky-50 text-sky-700",
-  C: "border-slate-300 bg-slate-50 text-slate-600",
+  A: "border-emerald-500/30 bg-emerald-500/10 text-emerald-400",
+  B: "border-sky-500/30 bg-sky-500/10 text-sky-400",
+  C: "border-white/10 bg-white/[0.04] text-ink-300",
 };
 function TierBadge({ tier }: { tier: SellerTier | null }) {
-  if (!tier) return <span className="text-xs text-slate-300">-</span>;
+  if (!tier) return <span className="text-xs text-ink-600">-</span>;
   return (
     <span className={`inline-flex rounded-full border px-2 py-0.5 text-xs font-medium ${TIER_COLORS[tier]}`}>
       {SELLER_TIER_LABELS_UZ[tier]}
@@ -70,8 +70,8 @@ function LeadsInner({ profile }: { profile: Profile }) {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-semibold text-slate-900">Leadlar</h1>
-          <p className="text-sm text-slate-500">Jami {total} ta lead</p>
+          <h1 className="text-xl font-semibold text-white">Leadlar</h1>
+          <p className="text-sm text-ink-400">Jami {total} ta lead</p>
         </div>
         <button className="btn-primary" onClick={() => setShowNew(true)}>
           <IconPlus width={16} height={16} /> Yangi lead
@@ -80,7 +80,7 @@ function LeadsInner({ profile }: { profile: Profile }) {
 
       <div className="flex flex-wrap items-center gap-3 card p-3">
         <div className="relative flex-1 min-w-[220px]">
-          <IconSearch width={16} height={16} className="pointer-events-none absolute left-3 top-2.5 text-slate-400" />
+          <IconSearch width={16} height={16} className="pointer-events-none absolute left-3 top-2.5 text-ink-500" />
           <input
             className="input pl-9"
             placeholder="Kompaniya, telefon yoki kontakt..."
@@ -123,11 +123,11 @@ function LeadsInner({ profile }: { profile: Profile }) {
         </select>
       </div>
 
-      {error && <div className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{error}</div>}
+      {error && <div className="rounded-lg border border-red-500/20 bg-red-500/10 px-3 py-2 text-sm text-red-400">{error}</div>}
 
       <div className="card overflow-hidden">
         <table className="w-full text-left text-sm">
-          <thead className="bg-slate-50 text-xs text-slate-500">
+          <thead className="bg-white/[0.04] text-xs text-ink-400">
             <tr>
               <th className="px-4 py-2.5">Kompaniya</th>
               <th className="px-4 py-2.5">Kontakt</th>
@@ -142,22 +142,22 @@ function LeadsInner({ profile }: { profile: Profile }) {
           <tbody>
             {!loading && rows.length === 0 && (
               <tr>
-                <td colSpan={8} className="px-4 py-8 text-center text-sm text-slate-400">
+                <td colSpan={8} className="px-4 py-8 text-center text-sm text-ink-500">
                   Leadlar topilmadi
                 </td>
               </tr>
             )}
             {rows.map((r) => (
-              <tr key={r.id} className="border-t border-slate-100 hover:bg-slate-50">
+              <tr key={r.id} className="border-t border-white/[0.06] hover:bg-white/[0.05]">
                 <td className="px-4 py-2.5">
-                  <Link href={`/leads/${r.id}`} className="font-medium text-slate-800 hover:text-brand-600">
+                  <Link href={`/leads/${r.id}`} className="font-medium text-white hover:text-brand-300">
                     {r.company_name}
                   </Link>
-                  <div className="text-xs text-slate-400">{r.city || r.location}</div>
+                  <div className="text-xs text-ink-500">{r.city || r.location}</div>
                 </td>
-                <td className="px-4 py-2.5 text-slate-600">
+                <td className="px-4 py-2.5 text-ink-300">
                   <div>{r.contact_person}</div>
-                  <div className="text-xs text-slate-400">{r.phone}</div>
+                  <div className="text-xs text-ink-500">{r.phone}</div>
                 </td>
                 <td className="px-4 py-2.5">
                   <StatusBadge status={r.status} />
@@ -168,11 +168,11 @@ function LeadsInner({ profile }: { profile: Profile }) {
                 <td className="px-4 py-2.5">
                   <PriorityBadge priority={r.priority} />
                 </td>
-                <td className="px-4 py-2.5 text-slate-600">{r.manager_name || "-"}</td>
+                <td className="px-4 py-2.5 text-ink-300">{r.manager_name || "-"}</td>
                 <td className="px-4 py-2.5">
                   <ScoreBadge score={r.lead_score || 0} />
                 </td>
-                <td className="px-4 py-2.5 text-slate-600">{r.next_followup_at ? new Date(r.next_followup_at).toLocaleDateString("uz-UZ") : "-"}</td>
+                <td className="px-4 py-2.5 text-ink-300">{r.next_followup_at ? new Date(r.next_followup_at).toLocaleDateString("uz-UZ") : "-"}</td>
               </tr>
             ))}
           </tbody>
@@ -180,7 +180,7 @@ function LeadsInner({ profile }: { profile: Profile }) {
       </div>
 
       {totalPages > 1 && (
-        <div className="flex items-center justify-between text-sm text-slate-500">
+        <div className="flex items-center justify-between text-sm text-ink-400">
           <span>
             {page} / {totalPages} sahifa
           </span>

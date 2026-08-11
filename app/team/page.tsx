@@ -155,23 +155,23 @@ function TeamInner({ profile }: { profile: Profile }) {
   return (
     <div className="space-y-4">
       <div>
-        <h1 className="text-xl font-semibold text-slate-900">Jamoa</h1>
-        <p className="text-sm text-slate-500">CRM foydalanuvchilarini boshqarish</p>
+        <h1 className="text-xl font-semibold text-white">Jamoa</h1>
+        <p className="text-sm text-ink-400">CRM foydalanuvchilarini boshqarish</p>
       </div>
 
-      {error && <div className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{error}</div>}
+      {error && <div className="rounded-lg border border-red-500/20 bg-red-500/10 px-3 py-2 text-sm text-red-400">{error}</div>}
 
       <div className="card p-4">
-        <h2 className="mb-3 text-sm font-semibold text-slate-800">A'zolar ({members.length})</h2>
+        <h2 className="mb-3 text-sm font-semibold text-white">A'zolar ({members.length})</h2>
         {loading ? (
-          <div className="text-sm text-slate-400">Yuklanmoqda...</div>
+          <div className="text-sm text-ink-500">Yuklanmoqda...</div>
         ) : (
           <div className="space-y-2">
             {members.map((m) => (
-              <div key={m.id} className="flex items-center justify-between rounded-lg bg-slate-50 px-3 py-2">
+              <div key={m.id} className="flex items-center justify-between rounded-lg bg-white/[0.04] px-3 py-2">
                 <div>
-                  <div className="text-sm font-medium text-slate-800">{m.full_name || "Noma'lum"}</div>
-                  <div className="text-xs text-slate-400">{m.phone || "-"}</div>
+                  <div className="text-sm font-medium text-white">{m.full_name || "Noma'lum"}</div>
+                  <div className="text-xs text-ink-500">{m.phone || "-"}</div>
                 </div>
                 <div className="flex items-center gap-2">
                   <select
@@ -187,7 +187,7 @@ function TeamInner({ profile }: { profile: Profile }) {
                     ))}
                   </select>
                   <button
-                    className="text-slate-400 hover:text-red-600 disabled:opacity-30"
+                    className="text-ink-500 hover:text-red-400 disabled:opacity-30"
                     disabled={m.id === profile.id}
                     onClick={() => removeMember(m.id)}
                     title="O'chirish"
@@ -197,21 +197,21 @@ function TeamInner({ profile }: { profile: Profile }) {
                 </div>
               </div>
             ))}
-            {members.length === 0 && <div className="text-sm text-slate-400">A'zo yo'q</div>}
+            {members.length === 0 && <div className="text-sm text-ink-500">A'zo yo'q</div>}
           </div>
         )}
       </div>
 
       <div className="card p-4">
-        <div className="mb-4 flex gap-2 border-b border-slate-100 pb-3">
+        <div className="mb-4 flex gap-2 border-b border-white/[0.06] pb-3">
           <button
-            className={`rounded-lg px-3 py-1.5 text-sm font-medium ${tab === "existing" ? "bg-brand-50 text-brand-700" : "text-slate-500 hover:bg-slate-50"}`}
+            className={`rounded-lg px-3 py-1.5 text-sm font-medium ${tab === "existing" ? "bg-brand-500/10 text-brand-300" : "text-ink-400 hover:bg-white/[0.05]"}`}
             onClick={() => setTab("existing")}
           >
             Mavjud foydalanuvchini qo'shish
           </button>
           <button
-            className={`rounded-lg px-3 py-1.5 text-sm font-medium ${tab === "new" ? "bg-brand-50 text-brand-700" : "text-slate-500 hover:bg-slate-50"}`}
+            className={`rounded-lg px-3 py-1.5 text-sm font-medium ${tab === "new" ? "bg-brand-500/10 text-brand-300" : "text-ink-400 hover:bg-white/[0.05]"}`}
             onClick={() => setTab("new")}
           >
             Yangi akkaunt yaratish
@@ -238,10 +238,10 @@ function TeamInner({ profile }: { profile: Profile }) {
             </div>
             <div className="space-y-2">
               {searchResults.map((u) => (
-                <div key={u.id} className="flex items-center justify-between rounded-lg bg-slate-50 px-3 py-2 text-sm">
+                <div key={u.id} className="flex items-center justify-between rounded-lg bg-white/[0.04] px-3 py-2 text-sm">
                   <div>
-                    <div className="font-medium text-slate-800">{u.full_name || "Noma'lum"}</div>
-                    <div className="text-xs text-slate-400">
+                    <div className="font-medium text-white">{u.full_name || "Noma'lum"}</div>
+                    <div className="text-xs text-ink-500">
                       {u.phone || "-"} · {u.role}
                     </div>
                   </div>
@@ -250,12 +250,12 @@ function TeamInner({ profile }: { profile: Profile }) {
                   </button>
                 </div>
               ))}
-              {searchQuery && !searching && searchResults.length === 0 && <div className="text-sm text-slate-400">Topilmadi</div>}
+              {searchQuery && !searching && searchResults.length === 0 && <div className="text-sm text-ink-500">Topilmadi</div>}
             </div>
           </div>
         ) : (
           <div className="max-w-md space-y-3">
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-ink-400">
               Tizimda hali umuman ro'yxatdan o'tmagan odam uchun yangi akkaunt yaratiladi. Vaqtinchalik parol bir marta ko'rsatiladi.
             </p>
             <form onSubmit={createEmployee} className="space-y-3">
@@ -280,17 +280,17 @@ function TeamInner({ profile }: { profile: Profile }) {
                     </option>
                   ))}
                 </select>
-                <p className="mt-1 text-xs text-slate-400">{TEAM_ROLE_DESCRIPTIONS_UZ[role as keyof typeof TEAM_ROLE_DESCRIPTIONS_UZ]}</p>
+                <p className="mt-1 text-xs text-ink-500">{TEAM_ROLE_DESCRIPTIONS_UZ[role as keyof typeof TEAM_ROLE_DESCRIPTIONS_UZ]}</p>
               </div>
-              {createError && <div className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{createError}</div>}
+              {createError && <div className="rounded-lg border border-red-500/20 bg-red-500/10 px-3 py-2 text-sm text-red-400">{createError}</div>}
               <button type="submit" className="btn-primary w-full" disabled={creating}>
                 {creating ? "Yaratilmoqda..." : "Akkaunt yaratish"}
               </button>
             </form>
             {createdResult && (
-              <div className="rounded-lg border border-green-200 bg-green-50 p-3">
+              <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/10 p-3">
                 <div className="text-sm font-medium text-green-800">Akkaunt yaratildi</div>
-                <div className="mt-2 space-y-1 text-sm text-slate-700">
+                <div className="mt-2 space-y-1 text-sm text-ink-100">
                   <div>
                     Email: <span className="font-mono">{createdResult.email}</span>
                   </div>

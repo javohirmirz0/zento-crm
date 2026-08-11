@@ -1,7 +1,7 @@
 const LEVEL_STYLES: Record<string, string> = {
-  good: "bg-green-100 text-green-700",
-  warning: "bg-amber-100 text-amber-700",
-  critical: "bg-red-100 text-red-700",
+  good: "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20",
+  warning: "bg-amber-500/10 text-amber-400 border border-amber-500/20",
+  critical: "bg-red-500/10 text-red-400 border border-red-500/20",
 };
 const LEVEL_LABELS_UZ: Record<string, string> = {
   good: "Yaxshi",
@@ -11,7 +11,7 @@ const LEVEL_LABELS_UZ: Record<string, string> = {
 
 export function HealthBadge({ level, score }: { level: string; score: number }) {
   return (
-    <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium ${LEVEL_STYLES[level] || LEVEL_STYLES.warning}`}>
+    <span className={`pill ${LEVEL_STYLES[level] || LEVEL_STYLES.warning}`}>
       {LEVEL_LABELS_UZ[level] || level} · {Math.round(score)}
     </span>
   );

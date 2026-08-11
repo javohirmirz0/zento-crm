@@ -25,10 +25,10 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
+    <div className="flex min-h-screen items-center justify-center px-4">
       <div className="w-full max-w-sm card p-8">
-        <h1 className="text-xl font-semibold text-slate-900">ZENTO Seller CRM</h1>
-        <p className="mt-1 text-sm text-slate-500">Tizimga kirish uchun email va parolni kiriting.</p>
+        <h1 className="text-xl font-semibold text-white">ZENTO Seller CRM</h1>
+        <p className="mt-1 text-sm text-ink-400">Tizimga kirish uchun email va parolni kiriting.</p>
         <form onSubmit={handleSubmit} className="mt-6 space-y-4">
           <div>
             <label className="label">Email</label>
@@ -38,7 +38,7 @@ export default function LoginPage() {
             <label className="label">Parol</label>
             <input className="input" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" />
           </div>
-          {error && <div className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{error}</div>}
+          {error && <div className="rounded-lg border border-red-500/20 bg-red-500/10 px-3 py-2 text-sm text-red-400">{error}</div>}
           <button type="submit" disabled={loading} className="btn-primary w-full">
             {loading ? "Kirilmoqda..." : "Kirish"}
           </button>

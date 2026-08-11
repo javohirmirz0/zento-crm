@@ -46,14 +46,14 @@ function PipelineInner({ profile }: { profile: Profile }) {
   return (
     <div className="space-y-4">
       <div>
-        <h1 className="text-xl font-semibold text-slate-900">Pipeline</h1>
-        <p className="text-sm text-slate-500">CRM deal'lar bo'yicha umumiy voronka (kanban)</p>
+        <h1 className="text-xl font-semibold text-white">Pipeline</h1>
+        <p className="text-sm text-ink-400">CRM deal'lar bo'yicha umumiy voronka (kanban)</p>
       </div>
 
-      {error && <div className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{error}</div>}
+      {error && <div className="rounded-lg border border-red-500/20 bg-red-500/10 px-3 py-2 text-sm text-red-400">{error}</div>}
 
       {loading ? (
-        <div className="text-sm text-slate-500">Yuklanmoqda...</div>
+        <div className="text-sm text-ink-400">Yuklanmoqda...</div>
       ) : (
         <div className="flex gap-3 overflow-x-auto pb-4">
           {stages.map((stage) => {
@@ -61,18 +61,18 @@ function PipelineInner({ profile }: { profile: Profile }) {
             return (
               <div
                 key={stage.id}
-                className="w-64 shrink-0 rounded-xl border border-slate-200 bg-white"
+                className="w-64 shrink-0 rounded-xl border border-white/10 bg-ink-800/60"
                 onDragOver={(e) => e.preventDefault()}
                 onDrop={() => {
                   if (dragId) moveDeal(dragId, stage.id);
                   setDragId(null);
                 }}
               >
-                <div className="flex items-center justify-between border-b border-slate-100 px-3 py-2">
+                <div className="flex items-center justify-between border-b border-white/[0.06] px-3 py-2">
                   <span className="text-xs font-semibold" style={{ color: stage.color }}>
                     {stage.name}
                   </span>
-                  <span className="text-xs text-slate-400">{stageDeals.length}</span>
+                  <span className="text-xs text-ink-500">{stageDeals.length}</span>
                 </div>
                 <div className="space-y-2 p-2">
                   {stageDeals.map((d) => (
@@ -81,19 +81,19 @@ function PipelineInner({ profile }: { profile: Profile }) {
                       draggable
                       onDragStart={() => setDragId(d.id)}
                       onClick={() => setActiveDeal(d.id)}
-                      className="cursor-pointer rounded-lg border border-slate-200 bg-slate-50 p-2.5 text-sm hover:border-brand-300"
+                      className="cursor-pointer rounded-lg border border-white/10 bg-white/[0.04] p-2.5 text-sm hover:border-brand-300"
                     >
-                      <div className="font-medium text-slate-800">{d.title}</div>
-                      <div className="mt-0.5 text-xs text-slate-500">{d.contact_name || "-"}</div>
-                      {d.value != null && <div className="mt-1 text-xs font-medium text-brand-600">{d.value}</div>}
+                      <div className="font-medium text-white">{d.title}</div>
+                      <div className="mt-0.5 text-xs text-ink-400">{d.contact_name || "-"}</div>
+                      {d.value != null && <div className="mt-1 text-xs font-medium text-brand-300">{d.value}</div>}
                     </div>
                   ))}
-                  {stageDeals.length === 0 && <div className="px-1 py-3 text-center text-xs text-slate-300">Bo'sh</div>}
+                  {stageDeals.length === 0 && <div className="px-1 py-3 text-center text-xs text-ink-600">Bo'sh</div>}
                 </div>
               </div>
             );
           })}
-          {stages.length === 0 && <div className="text-sm text-slate-400">Pipeline bosqichlari topilmadi</div>}
+          {stages.length === 0 && <div className="text-sm text-ink-500">Pipeline bosqichlari topilmadi</div>}
         </div>
       )}
 

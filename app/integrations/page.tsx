@@ -82,17 +82,17 @@ function IntegrationsInner({ profile }: { profile: Profile }) {
   return (
     <div className="space-y-4">
       <div>
-        <h1 className="text-xl font-semibold text-slate-900">Integratsiyalar</h1>
-        <p className="text-sm text-slate-500">Kanallar orqali avtomatik lead qabul qilish</p>
+        <h1 className="text-xl font-semibold text-white">Integratsiyalar</h1>
+        <p className="text-sm text-ink-400">Kanallar orqali avtomatik lead qabul qilish</p>
       </div>
 
       {quota && (
-        <div className="card p-3 text-sm text-slate-600">
+        <div className="card p-3 text-sm text-ink-300">
           SMS kvotasi: {quota.used ?? 0} / {quota.limit ?? "-"} bugun
         </div>
       )}
 
-      {error && <div className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{error}</div>}
+      {error && <div className="rounded-lg border border-red-500/20 bg-red-500/10 px-3 py-2 text-sm text-red-400">{error}</div>}
 
       <form onSubmit={createChannel} className="card flex flex-wrap items-end gap-3 p-4">
         <div>
@@ -115,7 +115,7 @@ function IntegrationsInner({ profile }: { profile: Profile }) {
       </form>
 
       {loading ? (
-        <div className="text-sm text-slate-500">Yuklanmoqda...</div>
+        <div className="text-sm text-ink-400">Yuklanmoqda...</div>
       ) : (
         <div className="space-y-3">
           {channels.map((c) => (
@@ -123,13 +123,13 @@ function IntegrationsInner({ profile }: { profile: Profile }) {
               <div className="flex items-center justify-between">
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-semibold text-slate-800">{c.name}</span>
-                    <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-500">{CHANNEL_LABELS_UZ[c.type]}</span>
-                    <span className={`rounded-full px-2 py-0.5 text-xs ${c.is_active ? "bg-green-100 text-green-700" : "bg-slate-100 text-slate-500"}`}>
+                    <span className="text-sm font-semibold text-white">{c.name}</span>
+                    <span className="rounded-full bg-white/[0.06] px-2 py-0.5 text-xs text-ink-400">{CHANNEL_LABELS_UZ[c.type]}</span>
+                    <span className={`rounded-full px-2 py-0.5 text-xs ${c.is_active ? "bg-emerald-500/10 text-emerald-400" : "bg-white/[0.06] text-ink-400"}`}>
                       {c.is_active ? "Aktiv" : "O'chirilgan"}
                     </span>
                   </div>
-                  <p className="mt-1 text-xs text-slate-400">{CHANNEL_DESCRIPTIONS_UZ[c.type]}</p>
+                  <p className="mt-1 text-xs text-ink-500">{CHANNEL_DESCRIPTIONS_UZ[c.type]}</p>
                 </div>
                 <div className="flex items-center gap-2">
                   <button className="btn-secondary" onClick={() => toggle(c)}>
@@ -138,14 +138,14 @@ function IntegrationsInner({ profile }: { profile: Profile }) {
                 </div>
               </div>
               {c.type !== "manual" && (
-                <div className="mt-3 flex items-center gap-2 rounded-lg bg-slate-50 px-3 py-2">
-                  <code className="flex-1 overflow-x-auto whitespace-nowrap text-xs text-slate-600">
+                <div className="mt-3 flex items-center gap-2 rounded-lg bg-white/[0.04] px-3 py-2">
+                  <code className="flex-1 overflow-x-auto whitespace-nowrap text-xs text-ink-300">
                     {FUNCTIONS_BASE}/{c.webhook_token}
                   </code>
-                  <button className="text-slate-400 hover:text-slate-700" onClick={() => copyWebhook(c)} title="Nusxalash">
+                  <button className="text-ink-500 hover:text-ink-100" onClick={() => copyWebhook(c)} title="Nusxalash">
                     <IconCopy width={15} height={15} />
                   </button>
-                  <button className="text-slate-400 hover:text-slate-700" onClick={() => rotateToken(c)} title="Tokenni yangilash">
+                  <button className="text-ink-500 hover:text-ink-100" onClick={() => rotateToken(c)} title="Tokenni yangilash">
                     <IconRefresh width={15} height={15} />
                   </button>
                   {copiedId === c.id && <span className="text-xs text-green-600">Nusxalandi!</span>}
@@ -153,7 +153,7 @@ function IntegrationsInner({ profile }: { profile: Profile }) {
               )}
             </div>
           ))}
-          {channels.length === 0 && <div className="text-sm text-slate-400">Kanal yo'q</div>}
+          {channels.length === 0 && <div className="text-sm text-ink-500">Kanal yo'q</div>}
         </div>
       )}
     </div>

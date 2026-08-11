@@ -44,8 +44,8 @@ export function AskAiBox() {
 
   return (
     <div className="card p-4">
-      <div className="flex items-center gap-2 text-sm font-medium text-slate-800">
-        <IconSparkles width={16} height={16} className="text-brand-600" />
+      <div className="flex items-center gap-2 text-sm font-medium text-white">
+        <IconSparkles width={16} height={16} className="text-brand-300" />
         AI'dan so'rang
       </div>
       <form
@@ -73,14 +73,14 @@ export function AskAiBox() {
               setQuestion(ex);
               ask(ex);
             }}
-            className="rounded-full border border-slate-200 px-2.5 py-1 text-xs text-slate-500 hover:bg-slate-50"
+            className="rounded-full border border-white/10 px-2.5 py-1 text-xs text-ink-400 hover:bg-white/[0.05]"
           >
             {ex}
           </button>
         ))}
       </div>
-      {error && <div className="mt-3 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{error}</div>}
-      {answer && <div className="mt-3 whitespace-pre-line rounded-lg bg-brand-50 px-3 py-2 text-sm text-slate-800">{answer}</div>}
+      {error && <div className="mt-3 rounded-lg border border-red-500/20 bg-red-500/10 px-3 py-2 text-sm text-red-400">{error}</div>}
+      {answer && <div className="mt-3 whitespace-pre-line rounded-lg border border-brand-500/20 bg-brand-500/10 px-3 py-2 text-sm text-ink-100">{answer}</div>}
     </div>
   );
 }

@@ -46,7 +46,7 @@ export function AuthGate({ children }: { children: (profile: Profile) => React.R
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center text-sm text-slate-500">
+      <div className="flex min-h-screen items-center justify-center text-sm text-ink-400">
         Yuklanmoqda...
       </div>
     );
@@ -55,7 +55,7 @@ export function AuthGate({ children }: { children: (profile: Profile) => React.R
     return (
       <div className="flex min-h-screen items-center justify-center px-4 text-center">
         <div>
-          <p className="text-sm text-red-600">{error || "Xatolik yuz berdi"}</p>
+          <p className="text-sm text-red-400">{error || "Xatolik yuz berdi"}</p>
           <button className="btn-secondary mt-4" onClick={() => supabase.auth.signOut()}>
             Chiqish
           </button>

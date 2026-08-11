@@ -7,8 +7,12 @@ html, body {
 }
 
 body {
-  background-color: #f8fafc;
-  color: #0f172a;
+  background-color: #070a14;
+  background-image:
+    radial-gradient(1100px 520px at 12% -8%, rgba(47,107,255,0.16) 0%, rgba(7,10,20,0) 55%),
+    radial-gradient(900px 480px at 88% 0%, rgba(34,211,238,0.10) 0%, rgba(7,10,20,0) 55%);
+  background-attachment: fixed;
+  color: #e7ebf5;
 }
 
 ::-webkit-scrollbar {
@@ -16,25 +20,38 @@ body {
   height: 8px;
 }
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: #2a3350;
   border-radius: 9999px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 .btn-primary {
-  @apply inline-flex items-center justify-center gap-2 rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-50;
+  @apply inline-flex items-center justify-center gap-2 rounded-xl bg-brand-gradient px-4 py-2 text-sm font-medium text-white shadow-glow transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50;
 }
 .btn-secondary {
-  @apply inline-flex items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50;
+  @apply inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2 text-sm font-medium text-ink-100 backdrop-blur transition hover:bg-white/[0.08] disabled:cursor-not-allowed disabled:opacity-50;
 }
 .btn-danger {
-  @apply inline-flex items-center justify-center gap-2 rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50;
+  @apply inline-flex items-center justify-center gap-2 rounded-xl bg-red-500/90 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-50;
 }
 .input {
-  @apply w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 shadow-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500;
+  @apply w-full rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 text-sm text-ink-50 shadow-sm placeholder:text-ink-400 focus:border-brand-500/60 focus:outline-none focus:ring-1 focus:ring-brand-500/60;
 }
 .label {
-  @apply mb-1 block text-xs font-medium text-slate-600;
+  @apply mb-1 block text-xs font-medium text-ink-300;
 }
 .card {
-  @apply rounded-xl border border-slate-200 bg-white shadow-sm;
+  @apply relative overflow-hidden rounded-2xl border border-white/[0.06] bg-ink-850/70 shadow-card backdrop-blur-sm;
+}
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: radial-gradient(120% 120% at 0% 0%, rgba(47,107,255,0.10) 0%, rgba(255,255,255,0) 60%);
+}
+.pill {
+  @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium;
 }

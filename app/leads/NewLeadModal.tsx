@@ -77,10 +77,10 @@ export function NewLeadModal({ onClose, onCreated }: { onClose: () => void; onCr
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
-      <div className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-xl bg-white p-6 shadow-xl">
+      <div className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-xl bg-ink-850 border border-white/10 p-6 shadow-2xl">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-slate-900">Yangi lead</h2>
-          <button onClick={onClose} className="text-slate-400 hover:text-slate-600">
+          <h2 className="text-lg font-semibold text-white">Yangi lead</h2>
+          <button onClick={onClose} className="text-ink-500 hover:text-ink-300">
             <IconClose width={18} height={18} />
           </button>
         </div>
@@ -103,7 +103,7 @@ export function NewLeadModal({ onClose, onCreated }: { onClose: () => void; onCr
               <input className="input" value={location} onChange={(e) => setLocation(e.target.value)} />
             </div>
           </div>
-          {dupWarning && <div className="rounded-lg bg-amber-50 px-3 py-2 text-xs text-amber-700">{dupWarning}</div>}
+          {dupWarning && <div className="rounded-lg border border-amber-500/20 bg-amber-500/10 px-3 py-2 text-xs text-amber-400">{dupWarning}</div>}
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="label">Telegram</label>
@@ -143,7 +143,7 @@ export function NewLeadModal({ onClose, onCreated }: { onClose: () => void; onCr
                   key={s}
                   onClick={() => toggleSellsOn(s)}
                   className={`rounded-full border px-2.5 py-1 text-xs ${
-                    sellsOn.includes(s) ? "border-brand-500 bg-brand-50 text-brand-700" : "border-slate-200 text-slate-500"
+                    sellsOn.includes(s) ? "border-brand-500 bg-brand-500/10 text-brand-300" : "border-white/10 text-ink-400"
                   }`}
                 >
                   {SELLS_ON_LABELS_UZ[s]}
@@ -179,7 +179,7 @@ export function NewLeadModal({ onClose, onCreated }: { onClose: () => void; onCr
             <label className="label">Izoh</label>
             <textarea className="input" rows={2} value={note} onChange={(e) => setNote(e.target.value)} />
           </div>
-          {error && <div className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{error}</div>}
+          {error && <div className="rounded-lg border border-red-500/20 bg-red-500/10 px-3 py-2 text-sm text-red-400">{error}</div>}
           <div className="flex justify-end gap-2 pt-2">
             <button type="button" className="btn-secondary" onClick={onClose}>
               Bekor qilish

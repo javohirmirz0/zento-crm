@@ -6,6 +6,8 @@ import { AuthGate } from "@/components/AuthGate";
 import { Shell } from "@/components/Shell";
 import { StatusBadge, PriorityBadge } from "@/components/StatusBadge";
 import { CommsBox } from "@/components/CommsBox";
+import { IconSparkles } from "@/components/icons";
+import { LEAD_AGENTS, runAiAgent } from "@/lib/aiAgents";
 import {
   Profile,
   LEAD_STATUSES,
@@ -30,7 +32,7 @@ function Section({ title, children, right }: { title: string; children: React.Re
   return (
     <div className="card p-4">
       <div className="mb-3 flex items-center justify-between">
-        <h2 className="text-sm font-semibold text-slate-800">{title}</h2>
+        <h2 className="text-sm font-semibold text-white">{title}</h2>
         {right}
       </div>
       {children}
@@ -67,6 +69,23 @@ function LeadDetailInner({ profile }: { profile: Profile }) {
     has_warehouse: null,
     fulfillment_model: "unknown",
   });
+
+  const [aiBusy, setAiBusy] = useState<string | null>(null);
+  const [aiOutput, setAiOutput] = useState<{ key: string; text: string } | null>(null);
+  const [aiError, setAiError] = useState<string | null>(null);
+
+  async function runLeadAgent(key: string) {
+    setAiBusy(key);
+    setAiError(null);
+    setAiOutput(null);
+    const res = await runAiAgent(key, { leadId });
+    setAiBusy(null);
+    if (!res.ok) {
+      setAiError(res.error || "Xatolik");
+      return;
+    }
+    setAiOutput({ key, text: res.output || "" });
+  }
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -115,9 +134,9 @@ function LeadDetailInner({ profile }: { profile: Profile }) {
     load();
   }
 
-  if (loading) return <div className="text-sm text-slate-500">Yuklanmoqda...</div>;
-  if (error && !detail) return <div className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{error}</div>;
-  if (!detail?.lead) return <div className="text-sm text-slate-500">Lead topilmadi</div>;
+  if (loading) return <div className="text-sm text-ink-400">Yuklanmoqda...</div>;
+  if (error && !detail) return <div className="rounded-lg border border-red-500/20 bg-red-500/10 px-3 py-2 text-sm text-red-400">{error}</div>;
+  if (!detail?.lead) return <div className="text-sm text-ink-400">Lead topilmadi</div>;
 
   const lead = detail.lead;
 
@@ -125,10 +144,10 @@ function LeadDetailInner({ profile }: { profile: Profile }) {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <button onClick={() => router.push("/leads")} className="text-xs text-slate-400 hover:text-slate-600">
+          <button onClick={() => router.push("/leads")} className="text-xs text-ink-500 hover:text-ink-300">
             ← Leadlar
           </button>
-          <h1 className="mt-1 text-xl font-semibold text-slate-900">{lead.company_name}</h1>
+          <h1 className="mt-1 text-xl font-semibold text-white">{lead.company_name}</h1>
           <div className="mt-1 flex items-center gap-2">
             <StatusBadge status={lead.status} />
             <PriorityBadge priority={lead.priority} />
@@ -136,47 +155,47 @@ function LeadDetailInner({ profile }: { profile: Profile }) {
         </div>
       </div>
 
-      {error && <div className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{error}</div>}
+      {error && <div className="rounded-lg border border-red-500/20 bg-red-500/10 px-3 py-2 text-sm text-red-400">{error}</div>}
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         <div className="space-y-4 lg:col-span-2">
           <Section title="Asosiy ma'lumot">
             <div className="grid grid-cols-2 gap-3 text-sm">
               <div>
-                <div className="text-xs text-slate-400">Kontakt shaxs</div>
-                <div className="text-slate-800">{lead.contact_person}</div>
+                <div className="text-xs text-ink-500">Kontakt shaxs</div>
+                <div className="text-white">{lead.contact_person}</div>
               </div>
               <div>
-                <div className="text-xs text-slate-400">Telefon</div>
-                <div className="text-slate-800">{lead.phone}</div>
+                <div className="text-xs text-ink-500">Telefon</div>
+                <div className="text-white">{lead.phone}</div>
               </div>
               <div>
-                <div className="text-xs text-slate-400">Telegram</div>
-                <div className="text-slate-800">{lead.telegram || "-"}</div>
+                <div className="text-xs text-ink-500">Telegram</div>
+                <div className="text-white">{lead.telegram || "-"}</div>
               </div>
               <div>
-                <div className="text-xs text-slate-400">Instagram</div>
-                <div className="text-slate-800">{lead.instagram || "-"}</div>
+                <div className="text-xs text-ink-500">Instagram</div>
+                <div className="text-white">{lead.instagram || "-"}</div>
               </div>
               <div>
-                <div className="text-xs text-slate-400">Manba</div>
-                <div className="text-slate-800">{detail.source_name || "-"}</div>
+                <div className="text-xs text-ink-500">Manba</div>
+                <div className="text-white">{detail.source_name || "-"}</div>
               </div>
               <div>
-                <div className="text-xs text-slate-400">Kategoriya</div>
-                <div className="text-slate-800">{detail.category_name || "-"}</div>
+                <div className="text-xs text-ink-500">Kategoriya</div>
+                <div className="text-white">{detail.category_name || "-"}</div>
               </div>
               <div>
-                <div className="text-xs text-slate-400">Joylashuv</div>
-                <div className="text-slate-800">{lead.location || "-"}</div>
+                <div className="text-xs text-ink-500">Joylashuv</div>
+                <div className="text-white">{lead.location || "-"}</div>
               </div>
               <div>
-                <div className="text-xs text-slate-400">Taxminiy SKU</div>
-                <div className="text-slate-800">{lead.estimated_sku_count ?? "-"}</div>
+                <div className="text-xs text-ink-500">Taxminiy SKU</div>
+                <div className="text-white">{lead.estimated_sku_count ?? "-"}</div>
               </div>
               <div>
-                <div className="text-xs text-slate-400">Lead skor</div>
-                <div className="text-slate-800">{lead.lead_score}</div>
+                <div className="text-xs text-ink-500">Lead skor</div>
+                <div className="text-white">{lead.lead_score}</div>
               </div>
             </div>
           </Section>
@@ -189,7 +208,7 @@ function LeadDetailInner({ profile }: { profile: Profile }) {
                   disabled={busy}
                   onClick={() => runAction(() => supabase.rpc("set_seller_lead_tier", { p_lead_id: leadId, p_tier: lead.seller_tier === t ? null : t }))}
                   className={`rounded-full border px-2.5 py-1 text-xs ${
-                    lead.seller_tier === t ? "border-brand-500 bg-brand-50 text-brand-700" : "border-slate-200 text-slate-500 hover:bg-slate-50"
+                    lead.seller_tier === t ? "border-brand-500 bg-brand-500/10 text-brand-300" : "border-white/10 text-ink-400 hover:bg-white/[0.05]"
                   }`}
                 >
                   {SELLER_TIER_LABELS_UZ[t]}
@@ -238,7 +257,7 @@ function LeadDetailInner({ profile }: { profile: Profile }) {
                     runAction(() => supabase.rpc("set_seller_lead_status", { p_lead_id: leadId, p_new_status: s, p_note: null }))
                   }
                   className={`rounded-full border px-2.5 py-1 text-xs ${
-                    s === lead.status ? "border-brand-500 bg-brand-50 text-brand-700" : "border-slate-200 text-slate-500 hover:bg-slate-50"
+                    s === lead.status ? "border-brand-500 bg-brand-500/10 text-brand-300" : "border-white/10 text-ink-400 hover:bg-white/[0.05]"
                   }`}
                 >
                   {LEAD_STATUS_LABELS_UZ[s]}
@@ -295,7 +314,7 @@ function LeadDetailInner({ profile }: { profile: Profile }) {
                         setDraft((d) => ({ ...d, sells_on: d.sells_on.includes(s) ? d.sells_on.filter((x) => x !== s) : [...d.sells_on, s] }))
                       }
                       className={`rounded-full border px-2.5 py-1 text-xs ${
-                        draft.sells_on.includes(s) ? "border-brand-500 bg-brand-50 text-brand-700" : "border-slate-200 text-slate-500"
+                        draft.sells_on.includes(s) ? "border-brand-500 bg-brand-500/10 text-brand-300" : "border-white/10 text-ink-400"
                       }`}
                     >
                       {SELLS_ON_LABELS_UZ[s]}
@@ -368,7 +387,7 @@ function LeadDetailInner({ profile }: { profile: Profile }) {
                     disabled={busy}
                     onClick={() => runAction(() => supabase.rpc("set_seller_lead_signal", { p_lead_id: leadId, p_signal: sig, p_value: !activeAt }))}
                     className={`rounded-full border px-2.5 py-1 text-xs ${
-                      activeAt ? "border-green-500 bg-green-50 text-green-700" : "border-slate-200 text-slate-500"
+                      activeAt ? "border-emerald-500 bg-emerald-500/10 text-emerald-400" : "border-white/10 text-ink-400"
                     }`}
                   >
                     {SIGNAL_LABELS_UZ[sig]}
@@ -411,18 +430,18 @@ function LeadDetailInner({ profile }: { profile: Profile }) {
             <Section title="Marketplace holati">
               <div className="grid grid-cols-2 gap-3 text-sm">
                 <div>
-                  <div className="text-xs text-slate-400">Do'kon</div>
-                  <div className="text-slate-800">{detail.marketplace.store_name || "-"}</div>
+                  <div className="text-xs text-ink-500">Do'kon</div>
+                  <div className="text-white">{detail.marketplace.store_name || "-"}</div>
                 </div>
                 <div>
-                  <div className="text-xs text-slate-400">Mahsulotlar</div>
-                  <div className="text-slate-800">
+                  <div className="text-xs text-ink-500">Mahsulotlar</div>
+                  <div className="text-white">
                     {detail.marketplace.product_count} (tasdiqlangan: {detail.marketplace.approved_count})
                   </div>
                 </div>
                 <div>
-                  <div className="text-xs text-slate-400">Buyurtmalar</div>
-                  <div className="text-slate-800">{detail.marketplace.order_count}</div>
+                  <div className="text-xs text-ink-500">Buyurtmalar</div>
+                  <div className="text-white">{detail.marketplace.order_count}</div>
                 </div>
               </div>
               {detail.marketplace.onboarding && (
@@ -432,7 +451,7 @@ function LeadDetailInner({ profile }: { profile: Profile }) {
                     .map(([k, v]) => (
                       <span
                         key={k}
-                        className={`rounded-full px-2.5 py-1 text-xs ${v ? "bg-green-100 text-green-700" : "bg-slate-100 text-slate-500"}`}
+                        className={`rounded-full px-2.5 py-1 text-xs ${v ? "bg-emerald-500/10 text-emerald-400" : "bg-white/[0.06] text-ink-400"}`}
                       >
                         {k}
                       </span>
@@ -469,14 +488,14 @@ function LeadDetailInner({ profile }: { profile: Profile }) {
             </div>
             <div className="space-y-2">
               {(detail.followups || []).map((f: any) => (
-                <div key={f.id} className="flex items-center justify-between rounded-lg bg-slate-50 px-3 py-2 text-sm">
+                <div key={f.id} className="flex items-center justify-between rounded-lg bg-white/[0.04] px-3 py-2 text-sm">
                   <div>
-                    <span className={f.done ? "text-slate-400 line-through" : "text-slate-700"}>{new Date(f.due_at).toLocaleString("uz-UZ")}</span>
-                    {f.note && <span className="ml-2 text-slate-500">— {f.note}</span>}
+                    <span className={f.done ? "text-ink-500 line-through" : "text-ink-100"}>{new Date(f.due_at).toLocaleString("uz-UZ")}</span>
+                    {f.note && <span className="ml-2 text-ink-400">— {f.note}</span>}
                   </div>
                   {!f.done && (
                     <button
-                      className="text-xs font-medium text-brand-600 hover:underline"
+                      className="text-xs font-medium text-brand-300 hover:underline"
                       disabled={busy}
                       onClick={() => runAction(() => supabase.rpc("complete_seller_lead_followup", { p_followup_id: f.id, p_note: null }))}
                     >
@@ -485,12 +504,12 @@ function LeadDetailInner({ profile }: { profile: Profile }) {
                   )}
                 </div>
               ))}
-              {(detail.followups || []).length === 0 && <div className="text-sm text-slate-400">Follow-up yo'q</div>}
+              {(detail.followups || []).length === 0 && <div className="text-sm text-ink-500">Follow-up yo'q</div>}
             </div>
           </Section>
 
           <Section title="E'tirozlar">
-            <div className="mb-3 space-y-2 rounded-lg border border-slate-200 p-3">
+            <div className="mb-3 space-y-2 rounded-lg border border-white/10 p-3">
               <div className="flex gap-2">
                 <select className="input w-40 shrink-0" value={objectionType} onChange={(e) => setObjectionType(e.target.value as any)}>
                   {OBJECTION_TYPES.map((o) => (
@@ -547,26 +566,26 @@ function LeadDetailInner({ profile }: { profile: Profile }) {
             </div>
             <div className="space-y-2">
               {objections.map((o) => (
-                <div key={o.id} className="rounded-lg bg-slate-50 px-3 py-2 text-sm">
+                <div key={o.id} className="rounded-lg bg-white/[0.04] px-3 py-2 text-sm">
                   <div className="flex items-center justify-between">
-                    <span className="font-medium text-slate-700">{OBJECTION_LABELS_UZ[o.objection_type as keyof typeof OBJECTION_LABELS_UZ] || o.objection_type}</span>
+                    <span className="font-medium text-ink-100">{OBJECTION_LABELS_UZ[o.objection_type as keyof typeof OBJECTION_LABELS_UZ] || o.objection_type}</span>
                     {o.outcome && (
                       <span
                         className={`rounded-full px-2 py-0.5 text-xs ${
-                          o.outcome === "interested" ? "bg-green-100 text-green-700" : o.outcome === "not_interested" ? "bg-red-100 text-red-700" : "bg-slate-200 text-slate-600"
+                          o.outcome === "interested" ? "bg-emerald-500/10 text-emerald-400" : o.outcome === "not_interested" ? "bg-red-500/10 text-red-400" : "bg-white/[0.06] text-ink-400"
                         }`}
                       >
                         {OBJECTION_OUTCOME_LABELS_UZ[o.outcome as keyof typeof OBJECTION_OUTCOME_LABELS_UZ] || o.outcome}
                       </span>
                     )}
                   </div>
-                  {o.note && <div className="mt-1 text-slate-600">Seller: {o.note}</div>}
-                  {o.manager_response && <div className="mt-1 text-slate-600">Manager: {o.manager_response}</div>}
-                  {o.seller_reaction && <div className="mt-1 text-slate-500">Reaksiya: {o.seller_reaction}</div>}
-                  <div className="mt-1 text-xs text-slate-400">{new Date(o.created_at).toLocaleString("uz-UZ")}</div>
+                  {o.note && <div className="mt-1 text-ink-300">Seller: {o.note}</div>}
+                  {o.manager_response && <div className="mt-1 text-ink-300">Manager: {o.manager_response}</div>}
+                  {o.seller_reaction && <div className="mt-1 text-ink-400">Reaksiya: {o.seller_reaction}</div>}
+                  <div className="mt-1 text-xs text-ink-500">{new Date(o.created_at).toLocaleString("uz-UZ")}</div>
                 </div>
               ))}
-              {objections.length === 0 && <div className="text-sm text-slate-400">E'tiroz yo'q</div>}
+              {objections.length === 0 && <div className="text-sm text-ink-500">E'tiroz yo'q</div>}
             </div>
           </Section>
 
@@ -589,47 +608,72 @@ function LeadDetailInner({ profile }: { profile: Profile }) {
             </div>
             <div className="space-y-2">
               {(detail.notes || []).map((n: any) => (
-                <div key={n.id} className="rounded-lg bg-slate-50 px-3 py-2 text-sm">
-                  <div className="text-slate-700">{n.note}</div>
-                  <div className="mt-1 text-xs text-slate-400">
+                <div key={n.id} className="rounded-lg bg-white/[0.04] px-3 py-2 text-sm">
+                  <div className="text-ink-100">{n.note}</div>
+                  <div className="mt-1 text-xs text-ink-500">
                     {n.author_name} · {new Date(n.created_at).toLocaleString("uz-UZ")}
                   </div>
                 </div>
               ))}
-              {(detail.notes || []).length === 0 && <div className="text-sm text-slate-400">Izoh yo'q</div>}
+              {(detail.notes || []).length === 0 && <div className="text-sm text-ink-500">Izoh yo'q</div>}
             </div>
           </Section>
 
           <Section title="Status tarixi">
             <div className="space-y-2">
               {(detail.status_history || []).map((h: any) => (
-                <div key={h.id} className="text-sm text-slate-600">
-                  <span className="font-medium text-slate-800">{h.changed_by_name || "Tizim"}</span>{" "}
+                <div key={h.id} className="text-sm text-ink-300">
+                  <span className="font-medium text-white">{h.changed_by_name || "Tizim"}</span>{" "}
                   {h.old_status ? `${LEAD_STATUS_LABELS_UZ[h.old_status as keyof typeof LEAD_STATUS_LABELS_UZ] || h.old_status} → ` : ""}
                   {LEAD_STATUS_LABELS_UZ[h.new_status as keyof typeof LEAD_STATUS_LABELS_UZ] || h.new_status}
-                  <span className="ml-2 text-xs text-slate-400">{new Date(h.created_at).toLocaleString("uz-UZ")}</span>
+                  <span className="ml-2 text-xs text-ink-500">{new Date(h.created_at).toLocaleString("uz-UZ")}</span>
                 </div>
               ))}
-              {(detail.status_history || []).length === 0 && <div className="text-sm text-slate-400">Tarix yo'q</div>}
+              {(detail.status_history || []).length === 0 && <div className="text-sm text-ink-500">Tarix yo'q</div>}
             </div>
           </Section>
 
           <Section title="Faoliyat jurnali">
             <div className="space-y-2">
               {(detail.activity || []).map((a: any) => (
-                <div key={a.id} className="text-sm text-slate-600">
-                  <span className="font-medium text-slate-800">{a.actor_name || "Tizim"}</span> {a.action_type}
-                  {a.detail && <span className="text-slate-500"> — {a.detail}</span>}
-                  <span className="ml-2 text-xs text-slate-400">{new Date(a.created_at).toLocaleString("uz-UZ")}</span>
+                <div key={a.id} className="text-sm text-ink-300">
+                  <span className="font-medium text-white">{a.actor_name || "Tizim"}</span> {a.action_type}
+                  {a.detail && <span className="text-ink-400"> — {a.detail}</span>}
+                  <span className="ml-2 text-xs text-ink-500">{new Date(a.created_at).toLocaleString("uz-UZ")}</span>
                 </div>
               ))}
-              {(detail.activity || []).length === 0 && <div className="text-sm text-slate-400">Faoliyat yo'q</div>}
+              {(detail.activity || []).length === 0 && <div className="text-sm text-ink-500">Faoliyat yo'q</div>}
             </div>
           </Section>
         </div>
 
         <div className="space-y-4">
           <CommsBox leadId={leadId} phone={lead.phone} />
+
+          <Section title="AI Agentlar">
+            <div className="flex flex-wrap gap-2">
+              {LEAD_AGENTS.map((a) => (
+                <button
+                  key={a.key}
+                  className="pill border border-white/10 bg-white/[0.04] text-ink-200 hover:bg-white/[0.08] disabled:opacity-50"
+                  disabled={aiBusy === a.key}
+                  onClick={() => runLeadAgent(a.key)}
+                  title={a.description}
+                >
+                  <IconSparkles width={12} height={12} className="text-brand-300" />
+                  {aiBusy === a.key ? "..." : a.label}
+                </button>
+              ))}
+            </div>
+            {aiError && (
+              <div className="mt-3 rounded-lg border border-red-500/20 bg-red-500/10 px-3 py-2 text-xs text-red-400">{aiError}</div>
+            )}
+            {aiOutput && (
+              <div className="mt-3 max-h-80 overflow-y-auto whitespace-pre-line rounded-lg border border-brand-500/20 bg-brand-500/[0.06] px-3 py-2 text-xs text-ink-100">
+                {aiOutput.text}
+              </div>
+            )}
+          </Section>
           {(detail.tags || []).length > 0 && (
             <Section title="Teglar">
               <div className="flex flex-wrap gap-2">
