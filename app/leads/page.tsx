@@ -8,7 +8,21 @@ import { StatusBadge, PriorityBadge } from "@/components/StatusBadge";
 import { ScoreBadge } from "@/components/ScoreBadge";
 import { IconPlus, IconSearch } from "@/components/icons";
 import { NewLeadModal } from "./NewLeadModal";
-import { LEAD_STATUSES, LEAD_STATUS_LABELS_UZ, PRIORITIES, PRIORITY_LABELS_UZ, Profile } from "@/lib/types";
+import { LEAD_STATUSES, LEAD_STATUS_LABELS_UZ, PRIORITIES, PRIORITY_LABELS_UZ, Profile, SellerTier, SELLER_TIER_LABELS_UZ } from "@/lib/types";
+
+const TIER_COLORS: Record<SellerTier, string> = {
+  A: "border-emerald-300 bg-emerald-50 text-emerald-700",
+  B: "border-sky-300 bg-sky-50 text-sky-700",
+  C: "border-slate-300 bg-slate-50 text-slate-600",
+};
+function TierBadge({ tier }: { tier: SellerTier | null }) {
+  if (!tier) return <span className="text-xs text-slate-300">-</span>;
+  return (
+    <span className={`inline-flex rounded-full border px-2 py-0.5 text-xs font-medium ${TIER_COLORS[tier]}`}>
+      {SELLER_TIER_LABELS_UZ[tier]}
+    </span>
+  );
+}
 
 const PAGE_SIZE = 25;
 
@@ -118,6 +132,7 @@ function LeadsInner({ profile }: { profile: Profile }) {
               <th className="px-4 py-2.5">Kompaniya</th>
               <th className="px-4 py-2.5">Kontakt</th>
               <th className="px-4 py-2.5">Status</th>
+              <th className="px-4 py-2.5">Tier</th>
               <th className="px-4 py-2.5">Prioritet</th>
               <th className="px-4 py-2.5">Menejer</th>
               <th className="px-4 py-2.5">Skor</th>
@@ -127,7 +142,7 @@ function LeadsInner({ profile }: { profile: Profile }) {
           <tbody>
             {!loading && rows.length === 0 && (
               <tr>
-                <td colSpan={7} className="px-4 py-8 text-center text-sm text-slate-400">
+                <td colSpan={8} className="px-4 py-8 text-center text-sm text-slate-400">
                   Leadlar topilmadi
                 </td>
               </tr>
@@ -138,7 +153,7 @@ function LeadsInner({ profile }: { profile: Profile }) {
                   <Link href={`/leads/${r.id}`} className="font-medium text-slate-800 hover:text-brand-600">
                     {r.company_name}
                   </Link>
-                  <div className="text-xs text-slate-400">{r.location}</div>
+                  <div className="text-xs text-slate-400">{r.city || r.location}</div>
                 </td>
                 <td className="px-4 py-2.5 text-slate-600">
                   <div>{r.contact_person}</div>
@@ -146,6 +161,9 @@ function LeadsInner({ profile }: { profile: Profile }) {
                 </td>
                 <td className="px-4 py-2.5">
                   <StatusBadge status={r.status} />
+                </td>
+                <td className="px-4 py-2.5">
+                  <TierBadge tier={r.seller_tier} />
                 </td>
                 <td className="px-4 py-2.5">
                   <PriorityBadge priority={r.priority} />

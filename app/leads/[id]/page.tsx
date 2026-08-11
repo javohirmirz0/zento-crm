@@ -20,6 +20,10 @@ import {
   FULFILLMENT_MODEL_LABELS_UZ,
   SIGNAL_LABELS_UZ,
   SellerSignal,
+  SELLER_TIERS,
+  SELLER_TIER_LABELS_UZ,
+  OBJECTION_OUTCOMES,
+  OBJECTION_OUTCOME_LABELS_UZ,
 } from "@/lib/types";
 
 function Section({ title, children, right }: { title: string; children: React.ReactNode; right?: React.ReactNode }) {
@@ -50,9 +54,13 @@ function LeadDetailInner({ profile }: { profile: Profile }) {
   const [noteText, setNoteText] = useState("");
   const [objectionType, setObjectionType] = useState(OBJECTION_TYPES[0]);
   const [objectionNote, setObjectionNote] = useState("");
+  const [objectionResponse, setObjectionResponse] = useState("");
+  const [objectionReaction, setObjectionReaction] = useState("");
+  const [objectionOutcome, setObjectionOutcome] = useState<string>("");
   const [followupDate, setFollowupDate] = useState("");
   const [followupNote, setFollowupNote] = useState("");
   const [escalateReason, setEscalateReason] = useState("");
+  const [evidenceDraft, setEvidenceDraft] = useState<{ evidence_url: string; city: string }>({ evidence_url: "", city: "" });
 
   const [draft, setDraft] = useState<{ sells_on: string[]; has_warehouse: boolean | null; fulfillment_model: string }>({
     sells_on: [],
@@ -64,7 +72,11 @@ function LeadDetailInner({ profile }: { profile: Profile }) {
     setLoading(true);
     const [{ data, error }, objRes, mgrRes] = await Promise.all([
       supabase.rpc("seller_lead_detail", { p_lead_id: leadId }),
-      supabase.from("seller_lead_objections").select("id, objection_type, note, created_at").eq("lead_id", leadId).order("created_at", { ascending: false }),
+      supabase
+        .from("seller_lead_objections")
+        .select("id, objection_type, note, manager_response, seller_reaction, outcome, created_at")
+        .eq("lead_id", leadId)
+        .order("created_at", { ascending: false }),
       supabase.from("profiles").select("id, full_name").eq("role", "seller_manager"),
     ]);
     if (error) {
@@ -82,6 +94,7 @@ function LeadDetailInner({ profile }: { profile: Profile }) {
         fulfillment_model: data.lead.fulfillment_model || "unknown",
       });
       setEscalateReason(data.lead.escalate_reason || "");
+      setEvidenceDraft({ evidence_url: data.lead.evidence_url || "", city: data.lead.city || "" });
     }
     setError(null);
     setLoading(false);
@@ -166,6 +179,53 @@ function LeadDetailInner({ profile }: { profile: Profile }) {
                 <div className="text-slate-800">{lead.lead_score}</div>
               </div>
             </div>
+          </Section>
+
+          <Section title="Seller tier va evidence">
+            <div className="mb-3 flex flex-wrap gap-2">
+              {SELLER_TIERS.map((t) => (
+                <button
+                  key={t}
+                  disabled={busy}
+                  onClick={() => runAction(() => supabase.rpc("set_seller_lead_tier", { p_lead_id: leadId, p_tier: lead.seller_tier === t ? null : t }))}
+                  className={`rounded-full border px-2.5 py-1 text-xs ${
+                    lead.seller_tier === t ? "border-brand-500 bg-brand-50 text-brand-700" : "border-slate-200 text-slate-500 hover:bg-slate-50"
+                  }`}
+                >
+                  {SELLER_TIER_LABELS_UZ[t]}
+                </button>
+              ))}
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="label">Shahar</label>
+                <input className="input" value={evidenceDraft.city} onChange={(e) => setEvidenceDraft((d) => ({ ...d, city: e.target.value }))} />
+              </div>
+              <div>
+                <label className="label">Evidence URL</label>
+                <input
+                  className="input"
+                  placeholder="https://instagram.com/..."
+                  value={evidenceDraft.evidence_url}
+                  onChange={(e) => setEvidenceDraft((d) => ({ ...d, evidence_url: e.target.value }))}
+                />
+              </div>
+            </div>
+            <button
+              className="btn-secondary mt-3"
+              disabled={busy}
+              onClick={() =>
+                runAction(() =>
+                  supabase.rpc("set_seller_lead_evidence", {
+                    p_lead_id: leadId,
+                    p_evidence_url: evidenceDraft.evidence_url || null,
+                    p_city: evidenceDraft.city || null,
+                  })
+                )
+              }
+            >
+              Saqlash
+            </button>
           </Section>
 
           <Section title="Status">
@@ -430,24 +490,52 @@ function LeadDetailInner({ profile }: { profile: Profile }) {
           </Section>
 
           <Section title="E'tirozlar">
-            <div className="mb-3 flex gap-2">
-              <select className="input w-40 shrink-0" value={objectionType} onChange={(e) => setObjectionType(e.target.value as any)}>
-                {OBJECTION_TYPES.map((o) => (
-                  <option key={o} value={o}>
-                    {OBJECTION_LABELS_UZ[o]}
-                  </option>
-                ))}
-              </select>
-              <input className="input" placeholder="Izoh" value={objectionNote} onChange={(e) => setObjectionNote(e.target.value)} />
+            <div className="mb-3 space-y-2 rounded-lg border border-slate-200 p-3">
+              <div className="flex gap-2">
+                <select className="input w-40 shrink-0" value={objectionType} onChange={(e) => setObjectionType(e.target.value as any)}>
+                  {OBJECTION_TYPES.map((o) => (
+                    <option key={o} value={o}>
+                      {OBJECTION_LABELS_UZ[o]}
+                    </option>
+                  ))}
+                </select>
+                <input className="input" placeholder="Seller nima dedi..." value={objectionNote} onChange={(e) => setObjectionNote(e.target.value)} />
+              </div>
+              <input className="input" placeholder="Manager javobi" value={objectionResponse} onChange={(e) => setObjectionResponse(e.target.value)} />
+              <div className="flex gap-2">
+                <input className="input" placeholder="Seller reaksiyasi" value={objectionReaction} onChange={(e) => setObjectionReaction(e.target.value)} />
+                <select className="input w-40 shrink-0" value={objectionOutcome} onChange={(e) => setObjectionOutcome(e.target.value)}>
+                  <option value="">Natija — hali noaniq</option>
+                  {OBJECTION_OUTCOMES.map((o) => (
+                    <option key={o} value={o}>
+                      {OBJECTION_OUTCOME_LABELS_UZ[o]}
+                    </option>
+                  ))}
+                </select>
+              </div>
               <button
-                className="btn-primary shrink-0"
+                className="btn-primary"
                 disabled={busy}
                 onClick={() =>
                   runAction(async () => {
-                    const r = await supabase.rpc("add_seller_lead_objection", { p_lead_id: leadId, p_objection_type: objectionType, p_note: objectionNote || null });
+                    const r = await supabase.rpc("add_seller_lead_objection", {
+                      p_lead_id: leadId,
+                      p_objection_type: objectionType,
+                      p_note: objectionNote || null,
+                      p_manager_response: objectionResponse || null,
+                      p_seller_reaction: objectionReaction || null,
+                      p_outcome: objectionOutcome || null,
+                    });
                     if (!r.error) {
                       setObjectionNote("");
-                      const objRes = await supabase.from("seller_lead_objections").select("id, objection_type, note, created_at").eq("lead_id", leadId).order("created_at", { ascending: false });
+                      setObjectionResponse("");
+                      setObjectionReaction("");
+                      setObjectionOutcome("");
+                      const objRes = await supabase
+                        .from("seller_lead_objections")
+                        .select("id, objection_type, note, manager_response, seller_reaction, outcome, created_at")
+                        .eq("lead_id", leadId)
+                        .order("created_at", { ascending: false });
                       setObjections(objRes.data || []);
                     }
                     return r;
@@ -460,8 +548,22 @@ function LeadDetailInner({ profile }: { profile: Profile }) {
             <div className="space-y-2">
               {objections.map((o) => (
                 <div key={o.id} className="rounded-lg bg-slate-50 px-3 py-2 text-sm">
-                  <span className="font-medium text-slate-700">{OBJECTION_LABELS_UZ[o.objection_type as keyof typeof OBJECTION_LABELS_UZ] || o.objection_type}</span>
-                  {o.note && <span className="ml-2 text-slate-500">— {o.note}</span>}
+                  <div className="flex items-center justify-between">
+                    <span className="font-medium text-slate-700">{OBJECTION_LABELS_UZ[o.objection_type as keyof typeof OBJECTION_LABELS_UZ] || o.objection_type}</span>
+                    {o.outcome && (
+                      <span
+                        className={`rounded-full px-2 py-0.5 text-xs ${
+                          o.outcome === "interested" ? "bg-green-100 text-green-700" : o.outcome === "not_interested" ? "bg-red-100 text-red-700" : "bg-slate-200 text-slate-600"
+                        }`}
+                      >
+                        {OBJECTION_OUTCOME_LABELS_UZ[o.outcome as keyof typeof OBJECTION_OUTCOME_LABELS_UZ] || o.outcome}
+                      </span>
+                    )}
+                  </div>
+                  {o.note && <div className="mt-1 text-slate-600">Seller: {o.note}</div>}
+                  {o.manager_response && <div className="mt-1 text-slate-600">Manager: {o.manager_response}</div>}
+                  {o.seller_reaction && <div className="mt-1 text-slate-500">Reaksiya: {o.seller_reaction}</div>}
+                  <div className="mt-1 text-xs text-slate-400">{new Date(o.created_at).toLocaleString("uz-UZ")}</div>
                 </div>
               ))}
               {objections.length === 0 && <div className="text-sm text-slate-400">E'tiroz yo'q</div>}

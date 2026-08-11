@@ -54,6 +54,22 @@ export const PRIORITY_LABELS_UZ: Record<Priority, string> = {
   LOW: "Past",
 };
 
+export const SELLER_TIERS = ["A", "B", "C"] as const;
+export type SellerTier = (typeof SELLER_TIERS)[number];
+export const SELLER_TIER_LABELS_UZ: Record<SellerTier, string> = {
+  A: "A — Strategik",
+  B: "B — Yaxshi",
+  C: "C — Oddiy",
+};
+
+export const OBJECTION_OUTCOMES = ["interested", "not_interested", "pending"] as const;
+export type ObjectionOutcome = (typeof OBJECTION_OUTCOMES)[number];
+export const OBJECTION_OUTCOME_LABELS_UZ: Record<ObjectionOutcome, string> = {
+  interested: "Qiziqdi",
+  not_interested: "Qiziqmadi",
+  pending: "Hali noaniq",
+};
+
 export const OBJECTION_TYPES = [
   "COMMISSION",
   "LOGISTICS",
@@ -116,6 +132,9 @@ export interface SellerLead {
   estimated_monthly_sales: number | null;
   price_range: string | null;
   location: string | null;
+  city: string | null;
+  seller_tier: SellerTier | null;
+  evidence_url: string | null;
   status: LeadStatus;
   priority: Priority;
   assigned_manager: string | null;
