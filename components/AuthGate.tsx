@@ -1,0 +1,67 @@
+"use client";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { supabase } from "@/lib/supabaseClient";
+import { Profile } from "@/lib/types";
+
+export function AuthGate({ children }: { children: (profile: Profile) => React.ReactNode }) {
+  const router = useRouter();
+  const [profile, setProfile] = useState<Profile | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let active = true;
+    async function load() {
+      const { data: sessionData } = await supabase.auth.getSession();
+      const user = sessionData.session?.user;
+      if (!user) {
+        router.replace("/login");
+        return;
+      }
+      const { data, error } = await supabase.from("profiles").select("id, full_name, role, phone, avatar_url").eq("id", user.id).single();
+      if (!active) return;
+      if (error || !data) {
+        setError("Profil topilmadi");
+        setLoading(false);
+        return;
+      }
+      if (!["admin", "founder", "seller_manager"].includes(data.role)) {
+        setError("Sizda ushbu tizimga kirish huquqi yo'q");
+        setLoading(false);
+        return;
+      }
+      setProfile(data as Profile);
+      setLoading(false);
+    }
+    load();
+    const { data: sub } = supabase.auth.onAuthStateChange((event) => {
+      if (event === "SIGNED_OUT") router.replace("/login");
+    });
+    return () => {
+      active = false;
+      sub.subscription.unsubscribe();
+    };
+  }, [router]);
+
+  if (loading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center text-sm text-slate-500">
+        Yuklanmoqda...
+      </div>
+    );
+  }
+  if (error || !profile) {
+    return (
+      <div className="flex min-h-screen items-center justify-center px-4 text-center">
+        <div>
+          <p className="text-sm text-red-600">{error || "Xatolik yuz berdi"}</p>
+          <button className="btn-secondary mt-4" onClick={() => supabase.auth.signOut()}>
+            Chiqish
+          </button>
+        </div>
+      </div>
+    );
+  }
+  return <>{children(profile)}</>;
+}
