@@ -6,7 +6,19 @@ import { AuthGate } from "@/components/AuthGate";
 import { Shell } from "@/components/Shell";
 import { StatusBadge, PriorityBadge } from "@/components/StatusBadge";
 import { CommsBox } from "@/components/CommsBox";
-import { IconSparkles } from "@/components/icons";
+import { IconSparkles, IconCheck } from "@/components/icons";
+
+const ONBOARDING_STEPS: { key: string; label: string }[] = [
+  { key: "account_created", label: "Hisob ochildi" },
+  { key: "business_info_done", label: "Biznes ma'lumoti" },
+  { key: "contact_verified", label: "Kontakt tasdiqlandi" },
+  { key: "bank_info_done", label: "Bank ma'lumoti" },
+  { key: "agreement_accepted", label: "Shartnoma qabul qilindi" },
+  { key: "products_uploaded", label: "Mahsulot yuklandi (5+)" },
+  { key: "products_approved", label: "Mahsulot tasdiqlandi" },
+  { key: "stock_available", label: "Ombor/stock bor" },
+  { key: "first_order_received", label: "Birinchi buyurtma" },
+];
 import { LEAD_AGENTS, runAiAgent } from "@/lib/aiAgents";
 import {
   Profile,
@@ -85,6 +97,18 @@ function LeadDetailInner({ profile }: { profile: Profile }) {
       return;
     }
     setAiOutput({ key, text: res.output || "" });
+  }
+
+  const [onboardingBusy, setOnboardingBusy] = useState<string | null>(null);
+  async function toggleOnboardingStep(field: string, value: boolean) {
+    setOnboardingBusy(field);
+    const { error } = await supabase.rpc("set_seller_onboarding_step", { p_lead_id: leadId, p_field: field, p_value: value });
+    setOnboardingBusy(null);
+    if (error) {
+      setError(error.message);
+      return;
+    }
+    load();
   }
 
   const load = useCallback(async () => {
@@ -444,20 +468,34 @@ function LeadDetailInner({ profile }: { profile: Profile }) {
                   <div className="text-white">{detail.marketplace.order_count}</div>
                 </div>
               </div>
-              {detail.marketplace.onboarding && (
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {Object.entries(detail.marketplace.onboarding)
-                    .filter(([k]) => k !== "seller_id" && k !== "updated_at")
-                    .map(([k, v]) => (
-                      <span
-                        key={k}
-                        className={`rounded-full px-2.5 py-1 text-xs ${v ? "bg-emerald-500/10 text-emerald-400" : "bg-white/[0.06] text-ink-400"}`}
-                      >
-                        {k}
-                      </span>
-                    ))}
+              <div className="mt-3">
+                <div className="mb-2 flex items-center justify-between">
+                  <div className="text-xs font-medium text-ink-400">Onboarding checklist</div>
+                  <div className="text-xs text-ink-500">
+                    {ONBOARDING_STEPS.filter((s) => detail.marketplace?.onboarding?.[s.key]).length} / {ONBOARDING_STEPS.length}
+                  </div>
                 </div>
-              )}
+                <div className="flex flex-wrap gap-2">
+                  {ONBOARDING_STEPS.map((s) => {
+                    const done = !!detail.marketplace?.onboarding?.[s.key];
+                    return (
+                      <button
+                        key={s.key}
+                        disabled={onboardingBusy === s.key}
+                        onClick={() => toggleOnboardingStep(s.key, !done)}
+                        className={`pill border transition disabled:opacity-50 ${
+                          done
+                            ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-400"
+                            : "border-white/10 bg-white/[0.04] text-ink-400 hover:bg-white/[0.08]"
+                        }`}
+                      >
+                        {done && <IconCheck width={11} height={11} />}
+                        {s.label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
             </Section>
           )}
 
