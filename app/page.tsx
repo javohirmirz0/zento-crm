@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
 import { AuthGate } from "@/components/AuthGate";
 import { Shell } from "@/components/Shell";
@@ -25,8 +26,14 @@ const CONVERSION_PAIRS: [string, string][] = [
   ["ACTIVE", "FIRST_ORDER"],
 ];
 
+// Faza 1, Qadam 1.3: Employee Portal ajratildi — Command Center (bu sahifa) endi faqat
+// admin/founder uchun. Boshqa rollar (employee-tier) avtomatik /work'ga yo'naltiriladi.
+const EMPLOYEE_PORTAL_ROLES = ["seller_manager", "ops_manager", "logistics_manager", "finance_manager", "ai_developer", "employee"];
+
 function DashboardInner({ profile }: { profile: Profile }) {
+  const router = useRouter();
   const isAdmin = profile.role === "admin" || profile.role === "founder";
+  const shouldRedirectToWork = EMPLOYEE_PORTAL_ROLES.includes(profile.role);
   const [growth, setGrowth] = useState<any>(null);
   const [funnel, setFunnel] = useState<any>(null);
   const [followups, setFollowups] = useState<any[]>([]);
@@ -40,6 +47,11 @@ function DashboardInner({ profile }: { profile: Profile }) {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (shouldRedirectToWork) router.replace("/work");
+  }, [shouldRedirectToWork, router]);
+
+  useEffect(() => {
+    if (shouldRedirectToWork) return;
     let active = true;
     async function load() {
       setLoading(true);
