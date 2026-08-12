@@ -13,12 +13,14 @@ import {
   IconLeads,
   IconIntegrations,
   IconCheck,
+  IconChart,
 } from "./icons";
 
 const NAV = [
   { href: "/", label: "CEO Dashboard", icon: IconDashboard },
   { href: "/tasks", label: "Vazifalar", icon: IconCheck },
   { href: "/tasks/my", label: "Mening vazifalarim", icon: IconFollowup },
+  { href: "/employees", label: "Xodimlar & KPI", icon: IconChart, adminOnly: true },
   { href: "/leads", label: "Leadlar", icon: IconLeads },
   { href: "/pipeline", label: "Pipeline", icon: IconPipeline },
   { href: "/followups", label: "Follow-up", icon: IconFollowup },

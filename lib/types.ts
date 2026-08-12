@@ -402,3 +402,57 @@ export interface KpiActual {
   actual_value: number;
   computed_at: string;
 }
+
+export interface EmployeeListRow {
+  id: string;
+  full_name: string | null;
+  role: string;
+  role_title: string | null;
+  department: string | null;
+  hired_at: string | null;
+  manager_id: string | null;
+  manager_name: string | null;
+  has_profile: boolean;
+}
+
+export interface KpiActualRow {
+  kpi_key: string;
+  period: string;
+  actual_value: number;
+  label: string;
+  level: 1 | 2 | 3;
+  unit: "count" | "percent" | "currency";
+}
+
+export interface KpiTargetRow {
+  kpi_key: string;
+  period: string;
+  target_value: number;
+  label: string;
+  level: 1 | 2 | 3;
+  unit: "count" | "percent" | "currency";
+}
+
+export interface EodReportRow {
+  report_date: string;
+  tasks_planned: number;
+  tasks_completed: number;
+  summary: string | null;
+  tomorrow_followups: string | null;
+  submitted_at: string;
+}
+
+export interface EmployeeDetail {
+  profile: { id: string; full_name: string | null; role: string; phone: string | null };
+  employee_profile: { role_title: string | null; department: string | null; hired_at: string | null; manager_id: string | null; manager_name: string | null } | null;
+  kpi_actuals: KpiActualRow[];
+  kpi_targets: KpiTargetRow[];
+  recent_eod_reports: EodReportRow[];
+  task_stats: { open: number; overdue: number; verified_total: number };
+}
+
+export function kpiUnitFormat(value: number, unit: "count" | "percent" | "currency") {
+  if (unit === "percent") return `${value}%`;
+  if (unit === "currency") return `${new Intl.NumberFormat("uz-UZ").format(Math.round(value))} so'm`;
+  return new Intl.NumberFormat("uz-UZ").format(Math.round(value));
+}
