@@ -64,3 +64,5 @@ export const IconShield = (p: IconProps) =>
   base(<><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z" /><path d="M9 12l2 2 4-4" /></>, p);
 export const IconFile = (p: IconProps) =>
   base(<><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><path d="M14 2v6h6" /><path d="M9 13h6" /><path d="M9 17h6" /></>, p);
+export const IconBuilding = (p: IconProps) =>
+  base(<><rect x="4" y="2" width="16" height="20" rx="1" /><path d="M9 6h1M14 6h1M9 10h1M14 10h1M9 14h1M14 14h1" /><path d="M10 22v-4h4v4" /></>, p);
