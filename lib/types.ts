@@ -629,3 +629,68 @@ export const ACTIVITY_SOURCE_LABELS_UZ: Record<string, string> = {
   crm_deal: "CRM — Deal",
   task: "Vazifa",
 };
+
+// ============================================================
+// PERMISSION MATRIX (ZENTO Business OS — Faza 1, Qadam 1.2)
+// LEVEL 2 (module access) + LEVEL 3 (record scope), org_module_permissions'ga mos.
+// ============================================================
+
+export const PERMISSION_MODULES = [
+  "dashboard",
+  "tasks",
+  "crm",
+  "employees",
+  "automation",
+  "orders",
+  "finance",
+  "ask_ai",
+  "notifications",
+  "activity_log",
+  "ai_agents",
+  "integrations",
+  "team_management",
+] as const;
+export type PermissionModule = (typeof PERMISSION_MODULES)[number];
+
+export const PERMISSION_MODULE_LABELS_UZ: Record<PermissionModule, string> = {
+  dashboard: "CEO Dashboard",
+  tasks: "Vazifalar",
+  crm: "CRM (Leadlar/Pipeline)",
+  employees: "Xodimlar & KPI",
+  automation: "Avtomatlashtirish",
+  orders: "Buyurtmalar",
+  finance: "Moliya",
+  ask_ai: "Ask ZENTO",
+  notifications: "Bildirishnomalar",
+  activity_log: "Faoliyat jurnali",
+  ai_agents: "AI Agentlar",
+  integrations: "Integratsiyalar",
+  team_management: "Jamoa boshqaruvi",
+};
+
+export const PERMISSION_ACCESS_LEVELS = ["none", "read", "write"] as const;
+export type PermissionAccess = (typeof PERMISSION_ACCESS_LEVELS)[number];
+export const PERMISSION_ACCESS_LABELS_UZ: Record<PermissionAccess, string> = {
+  none: "Yo'q",
+  read: "O'qish",
+  write: "To'liq",
+};
+
+export const PERMISSION_SCOPES = ["self", "team", "all"] as const;
+export type PermissionScope = (typeof PERMISSION_SCOPES)[number];
+export const PERMISSION_SCOPE_LABELS_UZ: Record<PermissionScope, string> = {
+  self: "Faqat o'zi",
+  team: "Jamoasi",
+  all: "Hammasi",
+};
+
+export interface OrgModulePermission {
+  id: string;
+  organization_id: string;
+  role: TeamRole | string;
+  module: PermissionModule | string;
+  access: PermissionAccess | string;
+  scope: PermissionScope | string;
+  updated_at: string;
+  updated_by: string | null;
+}

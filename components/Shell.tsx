@@ -21,6 +21,7 @@ import {
   IconBell,
   IconHistory,
   IconChat,
+  IconShield,
 } from "./icons";
 
 const NAV = [
@@ -41,6 +42,7 @@ const NAV = [
   { href: "/agents", label: "AI Agentlar", icon: IconSparkles, adminOnly: true },
   { href: "/integrations", label: "Integratsiyalar", icon: IconIntegrations },
   { href: "/team", label: "Jamoa", icon: IconTeam, adminOnly: true },
+  { href: "/permissions", label: "Ruxsatlar matritsasi", icon: IconShield, adminOnly: true },
 ];
 
 function initials(name: string | null) {
