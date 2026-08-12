@@ -456,3 +456,67 @@ export function kpiUnitFormat(value: number, unit: "count" | "percent" | "curren
   if (unit === "currency") return `${new Intl.NumberFormat("uz-UZ").format(Math.round(value))} so'm`;
   return new Intl.NumberFormat("uz-UZ").format(Math.round(value));
 }
+
+// ============================================================
+// AUTOMATION ENGINE (ZENTO Command Center — Phase 3)
+// ============================================================
+
+export const AUTOMATION_TRIGGER_TABLES = ["tasks", "seller_leads"] as const;
+export type AutomationTriggerTable = (typeof AUTOMATION_TRIGGER_TABLES)[number];
+
+export const AUTOMATION_TRIGGER_EVENTS = ["INSERT", "UPDATE"] as const;
+export type AutomationTriggerEvent = (typeof AUTOMATION_TRIGGER_EVENTS)[number];
+
+export const AUTOMATION_CONDITION_OPS = ["eq", "neq", "is_null", "is_not_null", "gt", "lt", "gte", "lte", "changed_to"] as const;
+export type AutomationConditionOp = (typeof AUTOMATION_CONDITION_OPS)[number];
+
+export const AUTOMATION_CONDITION_OP_LABELS_UZ: Record<AutomationConditionOp, string> = {
+  eq: "= (teng)",
+  neq: "!= (teng emas)",
+  is_null: "bo'sh",
+  is_not_null: "bo'sh emas",
+  gt: "> (katta)",
+  lt: "< (kichik)",
+  gte: ">= (katta yoki teng)",
+  lte: "<= (kichik yoki teng)",
+  changed_to: "shu qiymatga o'zgardi",
+};
+
+export interface AutomationCondition {
+  field: string;
+  op: AutomationConditionOp;
+  value?: string;
+}
+
+export const AUTOMATION_ACTION_TYPES = ["send_notification", "create_task"] as const;
+export type AutomationActionType = (typeof AUTOMATION_ACTION_TYPES)[number];
+
+export interface AutomationAction {
+  id: string;
+  position: number;
+  action_type: AutomationActionType;
+  action_config: Record<string, any>;
+}
+
+export interface AutomationRule {
+  id: string;
+  name: string;
+  is_active: boolean;
+  trigger_table: string;
+  trigger_event: string;
+  trigger_condition: AutomationCondition[];
+  created_at: string;
+  actions: AutomationAction[];
+  last_run: { status: "success" | "failed"; triggered_at: string; error: string | null } | null;
+  run_count: number;
+}
+
+export interface AutomationRun {
+  id: string;
+  rule_id: string;
+  rule_name: string;
+  triggered_by_row_id: string | null;
+  triggered_at: string;
+  status: "success" | "failed";
+  error: string | null;
+}

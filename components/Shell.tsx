@@ -14,6 +14,7 @@ import {
   IconIntegrations,
   IconCheck,
   IconChart,
+  IconBolt,
 } from "./icons";
 
 const NAV = [
@@ -21,6 +22,7 @@ const NAV = [
   { href: "/tasks", label: "Vazifalar", icon: IconCheck },
   { href: "/tasks/my", label: "Mening vazifalarim", icon: IconFollowup },
   { href: "/employees", label: "Xodimlar & KPI", icon: IconChart, adminOnly: true },
+  { href: "/automation", label: "Avtomatlashtirish", icon: IconBolt, adminOnly: true },
   { href: "/leads", label: "Leadlar", icon: IconLeads },
   { href: "/pipeline", label: "Pipeline", icon: IconPipeline },
   { href: "/followups", label: "Follow-up", icon: IconFollowup },
