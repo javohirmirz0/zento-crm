@@ -573,3 +573,59 @@ export const ORDER_EXCEPTION_SOURCE_LABELS_UZ: Record<string, string> = {
   return_pending: "Qaytarish kutmoqda",
   penalty_appealed: "Jarima apellyatsiyasi",
 };
+
+// ============================================================
+// NOTIFICATION CENTER + UNIFIED ACTIVITY LOG (ZENTO Command Center — Phase 5)
+// ============================================================
+
+export interface NotificationRow {
+  id: string;
+  title: string | null;
+  message: string | null;
+  body: string | null;
+  type: string | null;
+  category: string | null;
+  severity: "info" | "warning" | "critical" | null;
+  is_read: boolean;
+  link: string | null;
+  created_at: string;
+}
+
+export const NOTIFICATION_SEVERITY_LABELS_UZ: Record<string, string> = {
+  info: "Ma'lumot",
+  warning: "Ogohlantirish",
+  critical: "Kritik",
+};
+
+export const NOTIFICATION_SEVERITY_COLORS: Record<string, string> = {
+  info: "border-sky-500/20 bg-sky-500/10 text-sky-400",
+  warning: "border-amber-500/20 bg-amber-500/10 text-amber-400",
+  critical: "border-red-500/20 bg-red-500/10 text-red-400",
+};
+
+export interface NotificationRoutingRule {
+  id: string;
+  category: string | null;
+  min_severity: string | null;
+  target_role: string | null;
+  channel: string | null;
+  created_at: string;
+}
+
+export interface ActivityLogRow {
+  source: "audit" | "crm_lead" | "crm_deal" | "task" | string;
+  actor_id: string | null;
+  actor_name: string | null;
+  action: string | null;
+  entity: string | null;
+  entity_id: string | null;
+  details: string | null;
+  created_at: string;
+}
+
+export const ACTIVITY_SOURCE_LABELS_UZ: Record<string, string> = {
+  audit: "Tizim (audit)",
+  crm_lead: "CRM — Lead",
+  crm_deal: "CRM — Deal",
+  task: "Vazifa",
+};

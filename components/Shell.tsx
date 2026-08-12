@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
 import { Profile, TEAM_ROLE_LABELS_UZ } from "@/lib/types";
@@ -17,6 +18,8 @@ import {
   IconBolt,
   IconWallet,
   IconTruck,
+  IconBell,
+  IconHistory,
 } from "./icons";
 
 const NAV = [
@@ -31,6 +34,8 @@ const NAV = [
   { href: "/pipeline", label: "Pipeline", icon: IconPipeline },
   { href: "/followups", label: "Follow-up", icon: IconFollowup },
   { href: "/economics", label: "Iqtisodiyot", icon: IconSparkles },
+  { href: "/notifications", label: "Bildirishnomalar", icon: IconBell },
+  { href: "/activity", label: "Faoliyat jurnali", icon: IconHistory, adminOnly: true },
   { href: "/agents", label: "AI Agentlar", icon: IconSparkles, adminOnly: true },
   { href: "/integrations", label: "Integratsiyalar", icon: IconIntegrations },
   { href: "/team", label: "Jamoa", icon: IconTeam, adminOnly: true },
@@ -45,11 +50,26 @@ function initials(name: string | null) {
 export function Shell({ profile, children }: { profile: Profile; children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
+  const [unreadCount, setUnreadCount] = useState(0);
 
   async function handleLogout() {
     await supabase.auth.signOut();
     router.replace("/login");
   }
+
+  useEffect(() => {
+    let cancelled = false;
+    async function loadUnread() {
+      const { data } = await supabase.rpc("notification_center_unread_count");
+      if (!cancelled && typeof data === "number") setUnreadCount(data);
+    }
+    loadUnread();
+    const interval = setInterval(loadUnread, 60000);
+    return () => {
+      cancelled = true;
+      clearInterval(interval);
+    };
+  }, [pathname]);
 
   const isAdmin = profile.role === "admin" || profile.role === "founder";
   const visibleNav = NAV.filter((item) => {
@@ -87,7 +107,12 @@ export function Shell({ profile, children }: { profile: Profile; children: React
                 }`}
               >
                 <Icon width={17} height={17} className={active ? "text-white" : "text-ink-400 group-hover:text-white"} />
-                {item.label}
+                <span className="flex-1">{item.label}</span>
+                {item.href === "/notifications" && unreadCount > 0 && (
+                  <span className="rounded-full bg-red-500 px-1.5 py-0.5 text-[10px] font-semibold leading-none text-white">
+                    {unreadCount > 99 ? "99+" : unreadCount}
+                  </span>
+                )}
               </Link>
             );
           })}
