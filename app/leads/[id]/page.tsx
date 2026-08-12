@@ -676,7 +676,23 @@ function LeadDetailInner({ profile }: { profile: Profile }) {
               {(detail.activity || []).map((a: any) => (
                 <div key={a.id} className="text-sm text-ink-300">
                   <span className="font-medium text-white">{a.actor_name || "Tizim"}</span> {a.action_type}
-                  {a.detail && <span className="text-ink-400"> — {a.detail}</span>}
+                  {a.detail && (
+                    <span className="text-ink-400">
+                      {" "}
+                      —{" "}
+                      {typeof a.detail === "string"
+                        ? a.detail
+                        : (() => {
+                            try {
+                              return Object.entries(a.detail as Record<string, unknown>)
+                                .map(([k, v]) => `${k}: ${typeof v === "object" && v !== null ? JSON.stringify(v) : String(v)}`)
+                                .join(", ");
+                            } catch {
+                              return "";
+                            }
+                          })()}
+                    </span>
+                  )}
                   <span className="ml-2 text-xs text-ink-500">{new Date(a.created_at).toLocaleString("uz-UZ")}</span>
                 </div>
               ))}
