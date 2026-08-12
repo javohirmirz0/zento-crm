@@ -3,13 +3,15 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
 import { Profile, TEAM_ROLE_LABELS_UZ } from "@/lib/types";
-import { IconDashboard, IconCheck, IconFollowup, IconLogout, IconLeads, IconTeam, IconChart } from "./icons";
+import { IconDashboard, IconCheck, IconFollowup, IconLogout, IconLeads, IconTeam, IconChart, IconWallet, IconFile } from "./icons";
 
 const BASE_NAV = [
   { href: "/work", label: "MY WORK", icon: IconDashboard },
   { href: "/work/tasks", label: "Vazifalarim", icon: IconCheck },
   { href: "/work/reports", label: "Hisobotlarim", icon: IconFollowup },
   { href: "/work/kpi", label: "KPI'im", icon: IconChart },
+  { href: "/work/salary", label: "Maoshim", icon: IconWallet },
+  { href: "/work/documents", label: "Hujjatlarim", icon: IconFile },
   { href: "/work/profile", label: "Profil", icon: IconTeam },
 ];
 

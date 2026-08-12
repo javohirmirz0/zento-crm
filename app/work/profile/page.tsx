@@ -31,7 +31,9 @@ function ProfileInner({ profile }: { profile: Profile }) {
       </div>
 
       <p className="text-xs text-ink-500">
-        Kontrakt/shartnoma va maosh bo'limlari keyingi bosqichlarda (Faza 1, Qadam 1.5–1.6) shu yerga qo'shiladi.
+        KPI'ingizni <a href="/work/kpi" className="text-brand-300 hover:text-brand-200">Mening KPI'im</a>, maoshingizni{" "}
+        <a href="/work/salary" className="text-brand-300 hover:text-brand-200">Maoshim</a>, shartnomangizni{" "}
+        <a href="/work/documents" className="text-brand-300 hover:text-brand-200">Hujjatlarim</a> bo'limidan ko'rishingiz mumkin.
       </p>
     </div>
   );
