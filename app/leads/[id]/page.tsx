@@ -75,6 +75,7 @@ function LeadDetailInner({ profile }: { profile: Profile }) {
   const [followupNote, setFollowupNote] = useState("");
   const [escalateReason, setEscalateReason] = useState("");
   const [evidenceDraft, setEvidenceDraft] = useState<{ evidence_url: string; city: string }>({ evidence_url: "", city: "" });
+  const [contactDraft, setContactDraft] = useState<{ contact_person: string; phone: string }>({ contact_person: "", phone: "" });
 
   const [draft, setDraft] = useState<{ sells_on: string[]; has_warehouse: boolean | null; fulfillment_model: string }>({
     sells_on: [],
@@ -138,6 +139,7 @@ function LeadDetailInner({ profile }: { profile: Profile }) {
       });
       setEscalateReason(data.lead.escalate_reason || "");
       setEvidenceDraft({ evidence_url: data.lead.evidence_url || "", city: data.lead.city || "" });
+      setContactDraft({ contact_person: data.lead.contact_person || "", phone: data.lead.phone || "" });
     }
     setError(null);
     setLoading(false);
@@ -186,12 +188,52 @@ function LeadDetailInner({ profile }: { profile: Profile }) {
           <Section title="Asosiy ma'lumot">
             <div className="grid grid-cols-2 gap-3 text-sm">
               <div>
-                <div className="text-xs text-ink-500">Kontakt shaxs</div>
-                <div className="text-white">{lead.contact_person}</div>
+                <label className="text-xs text-ink-500">Kontakt shaxs</label>
+                <input
+                  className="input mt-1"
+                  value={contactDraft.contact_person}
+                  onChange={(e) => setContactDraft((d) => ({ ...d, contact_person: e.target.value }))}
+                  placeholder="Kontakt shaxs kiritilmagan"
+                />
               </div>
               <div>
-                <div className="text-xs text-ink-500">Telefon</div>
-                <div className="text-white">{lead.phone}</div>
+                <label className="text-xs text-ink-500">Telefon</label>
+                <input
+                  className="input mt-1"
+                  value={contactDraft.phone}
+                  onChange={(e) => setContactDraft((d) => ({ ...d, phone: e.target.value }))}
+                  placeholder="+998..."
+                />
+              </div>
+              <div className="col-span-2 -mt-1">
+                <button
+                  className="btn-secondary"
+                  disabled={busy || (contactDraft.contact_person === (lead.contact_person || "") && contactDraft.phone === (lead.phone || ""))}
+                  onClick={() =>
+                    runAction(() =>
+                      supabase.rpc("update_seller_lead_details", {
+                        p_lead_id: leadId,
+                        p_company_name: lead.company_name,
+                        p_contact_person: contactDraft.contact_person || null,
+                        p_phone: contactDraft.phone || null,
+                        p_telegram: lead.telegram,
+                        p_instagram: lead.instagram,
+                        p_website: lead.website,
+                        p_category_id: lead.category_id,
+                        p_source_id: lead.source_id,
+                        p_estimated_sku_count: lead.estimated_sku_count,
+                        p_estimated_monthly_sales: lead.estimated_monthly_sales,
+                        p_price_range: lead.price_range,
+                        p_location: lead.location,
+                        p_sells_on: draft.sells_on,
+                        p_has_warehouse: draft.has_warehouse,
+                        p_fulfillment_model: draft.fulfillment_model,
+                      })
+                    )
+                  }
+                >
+                  Kontaktni saqlash
+                </button>
               </div>
               <div>
                 <div className="text-xs text-ink-500">Telegram</div>
