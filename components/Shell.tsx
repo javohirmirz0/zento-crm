@@ -5,24 +5,27 @@ import { supabase } from "@/lib/supabaseClient";
 import { Profile, TEAM_ROLE_LABELS_UZ } from "@/lib/types";
 import {
   IconDashboard,
-  IconLeads,
-  IconPipeline,
   IconFollowup,
-  IconIntegrations,
   IconTeam,
   IconLogout,
   IconSparkles,
+  IconPipeline,
+  IconLeads,
+  IconIntegrations,
+  IconCheck,
 } from "./icons";
 
 const NAV = [
-  { href: "/", label: "Dashboard", icon: IconDashboard },
+  { href: "/", label: "CEO Dashboard", icon: IconDashboard },
+  { href: "/tasks", label: "Vazifalar", icon: IconCheck },
+  { href: "/tasks/my", label: "Mening vazifalarim", icon: IconFollowup },
   { href: "/leads", label: "Leadlar", icon: IconLeads },
   { href: "/pipeline", label: "Pipeline", icon: IconPipeline },
   { href: "/followups", label: "Follow-up", icon: IconFollowup },
   { href: "/economics", label: "Iqtisodiyot", icon: IconSparkles },
-  { href: "/agents", label: "AI Agentlar", icon: IconSparkles },
+  { href: "/agents", label: "AI Agentlar", icon: IconSparkles, adminOnly: true },
   { href: "/integrations", label: "Integratsiyalar", icon: IconIntegrations },
-  { href: "/team", label: "Jamoa", icon: IconTeam },
+  { href: "/team", label: "Jamoa", icon: IconTeam, adminOnly: true },
 ];
 
 function initials(name: string | null) {
@@ -40,11 +43,8 @@ export function Shell({ profile, children }: { profile: Profile; children: React
     router.replace("/login");
   }
 
-  const visibleNav = NAV.filter((item) => {
-    if (item.href === "/team") return profile.role === "admin" || profile.role === "founder";
-    if (item.href === "/agents") return profile.role === "admin" || profile.role === "founder";
-    return true;
-  });
+  const isAdmin = profile.role === "admin" || profile.role === "founder";
+  const visibleNav = NAV.filter((item) => !item.adminOnly || isAdmin);
 
   return (
     <div className="flex min-h-screen bg-transparent">
@@ -54,13 +54,15 @@ export function Shell({ profile, children }: { profile: Profile; children: React
             Z
           </div>
           <div>
-            <div className="text-sm font-semibold tracking-wide text-white">ZENTO CRM</div>
-            <div className="text-[11px] text-ink-400">Sales Operating System</div>
+            <div className="text-sm font-semibold tracking-wide text-white">ZENTO COMMAND CENTER</div>
+            <div className="text-[11px] text-ink-400">Business Operating System</div>
           </div>
         </div>
         <nav className="flex-1 space-y-1 px-3">
           {visibleNav.map((item) => {
-            const active = pathname === item.href || (item.href !== "/" && pathname?.startsWith(item.href));
+            const active =
+              pathname === item.href ||
+              (item.href !== "/" && pathname?.startsWith(item.href + "/"));
             const Icon = item.icon;
             return (
               <Link

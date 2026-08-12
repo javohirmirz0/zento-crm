@@ -26,7 +26,17 @@ export function AuthGate({ children }: { children: (profile: Profile) => React.R
         setLoading(false);
         return;
       }
-      if (!["admin", "founder", "seller_manager"].includes(data.role)) {
+      const allowedRoles = [
+        "admin",
+        "founder",
+        "seller_manager",
+        "ops_manager",
+        "logistics_manager",
+        "finance_manager",
+        "ai_developer",
+        "employee",
+      ];
+      if (!allowedRoles.includes(data.role)) {
         setError("Sizda ushbu tizimga kirish huquqi yo'q");
         setLoading(false);
         return;

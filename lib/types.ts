@@ -1,5 +1,5 @@
 // Grounded directly against the live Supabase schema (ilbyzbmridyxxblclpyf) —
-// seller_leads / seller_lead_* tables, crm_* tables, and their check constraints.
+// seller_leads / seller_lead_* tables, crm_* tables, tasks/task_* tables, and their check constraints.
 
 export const LEAD_STATUSES = [
   "NEW",
@@ -242,17 +242,36 @@ export const ACTIVITY_TYPE_LABELS_UZ: Record<string, string> = {
   escalation: "Founderga o'tkazildi",
 };
 
-export const TEAM_ROLES = ["founder", "admin", "seller_manager"] as const;
+export const TEAM_ROLES = [
+  "founder",
+  "admin",
+  "seller_manager",
+  "ops_manager",
+  "logistics_manager",
+  "finance_manager",
+  "ai_developer",
+  "employee",
+] as const;
 export type TeamRole = (typeof TEAM_ROLES)[number];
 export const TEAM_ROLE_LABELS_UZ: Record<TeamRole, string> = {
   founder: "Founder",
   admin: "Admin",
   seller_manager: "Sotuvchi menejeri",
+  ops_manager: "Operatsion menejer",
+  logistics_manager: "Logistika menejeri",
+  finance_manager: "Moliya menejeri",
+  ai_developer: "AI Developer",
+  employee: "Xodim",
 };
 export const TEAM_ROLE_DESCRIPTIONS_UZ: Record<TeamRole, string> = {
   founder: "To'liq huquq — barcha leadlar, hisobotlar va jamoa boshqaruvi.",
   admin: "To'liq huquq — barcha leadlar, hisobotlar va jamoa boshqaruvi.",
   seller_manager: "Faqat o'ziga biriktirilgan leadlarni ko'radi va boshqaradi.",
+  ops_manager: "O'z jamoasining vazifalari va KPI'sini ko'radi va boshqaradi.",
+  logistics_manager: "Buyurtma/ombor/kuryer holatini ko'radi va boshqaradi.",
+  finance_manager: "Moliya va to'lov ma'lumotlarini ko'radi va boshqaradi.",
+  ai_developer: "AI agentlar va avtomatlashtirish ustida ishlaydi.",
+  employee: "Faqat o'z vazifalarini ko'radi va bajaradi.",
 };
 // Roles that crm-create-employee Edge Function is allowed to create.
 export const CREATABLE_TEAM_ROLES: TeamRole[] = ["seller_manager", "admin"];
@@ -263,4 +282,123 @@ export interface TeamMember {
   role: string;
   phone: string | null;
   org_role: string;
+}
+
+// ============================================================
+// TASK SYSTEM (ZENTO Command Center — Phase 0/1)
+// ============================================================
+
+export const TASK_PRIORITIES = ["critical", "high", "normal", "low"] as const;
+export type TaskPriority = (typeof TASK_PRIORITIES)[number];
+export const TASK_PRIORITY_LABELS_UZ: Record<TaskPriority, string> = {
+  critical: "🔴 Critical",
+  high: "🟠 High",
+  normal: "🟢 Normal",
+  low: "⚪ Low",
+};
+export const TASK_PRIORITY_COLORS: Record<TaskPriority, string> = {
+  critical: "bg-red-500/15 text-red-400 border border-red-500/20",
+  high: "bg-orange-500/15 text-orange-400 border border-orange-500/20",
+  normal: "bg-emerald-500/15 text-emerald-400 border border-emerald-500/20",
+  low: "bg-white/10 text-ink-300 border border-white/10",
+};
+
+export interface TaskBoard {
+  id: string;
+  name: string;
+  module: string;
+  created_by: string | null;
+  created_at: string;
+}
+
+export interface TaskStatus {
+  id: string;
+  board_id: string;
+  name: string;
+  position: number;
+  is_terminal: boolean;
+  requires_verification: boolean;
+}
+
+export interface Task {
+  id: string;
+  board_id: string;
+  status_id: string;
+  title: string;
+  description: string | null;
+  owner_id: string | null;
+  created_by: string | null;
+  priority: TaskPriority;
+  category: string | null;
+  related_seller_lead_id: string | null;
+  related_order_id: string | null;
+  expected_result: string | null;
+  deadline_at: string | null;
+  started_at: string | null;
+  done_at: string | null;
+  verified_at: string | null;
+  verified_by: string | null;
+  kpi_key: string | null;
+  created_at: string;
+  updated_at: string;
+  owner?: { full_name: string | null } | null;
+  status?: { name: string; is_terminal: boolean; requires_verification: boolean } | null;
+}
+
+export interface TaskChecklistItem {
+  id: string;
+  task_id: string;
+  label: string;
+  is_done: boolean;
+  done_at: string | null;
+  position: number;
+}
+
+export interface TaskComment {
+  id: string;
+  task_id: string;
+  author_id: string | null;
+  body: string;
+  created_at: string;
+  author?: { full_name: string | null } | null;
+}
+
+export interface TaskActivity {
+  id: string;
+  task_id: string;
+  actor_id: string | null;
+  action: string;
+  before: Record<string, unknown> | null;
+  after: Record<string, unknown> | null;
+  created_at: string;
+}
+
+// ============================================================
+// EMPLOYEE / KPI
+// ============================================================
+
+export interface EmployeeProfile {
+  id: string;
+  role_title: string | null;
+  department: string | null;
+  hired_at: string | null;
+  manager_id: string | null;
+}
+
+export interface KpiDefinition {
+  id: string;
+  key: string;
+  label: string;
+  level: 1 | 2 | 3;
+  unit: "count" | "percent" | "currency";
+  module: string | null;
+}
+
+export interface KpiActual {
+  id: string;
+  employee_id: string;
+  kpi_key: string;
+  period: string;
+  actual_value: number;
+  computed_at: string;
 }

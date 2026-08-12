@@ -27,7 +27,7 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-screen items-center justify-center px-4">
       <div className="w-full max-w-sm card p-8">
-        <h1 className="text-xl font-semibold text-white">ZENTO Seller CRM</h1>
+        <h1 className="text-xl font-semibold text-white">ZENTO Command Center</h1>
         <p className="mt-1 text-sm text-ink-400">Tizimga kirish uchun email va parolni kiriting.</p>
         <form onSubmit={handleSubmit} className="mt-6 space-y-4">
           <div>
