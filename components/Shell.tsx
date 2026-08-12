@@ -15,6 +15,8 @@ import {
   IconCheck,
   IconChart,
   IconBolt,
+  IconWallet,
+  IconTruck,
 } from "./icons";
 
 const NAV = [
@@ -23,6 +25,8 @@ const NAV = [
   { href: "/tasks/my", label: "Mening vazifalarim", icon: IconFollowup },
   { href: "/employees", label: "Xodimlar & KPI", icon: IconChart, adminOnly: true },
   { href: "/automation", label: "Avtomatlashtirish", icon: IconBolt, adminOnly: true },
+  { href: "/orders", label: "Buyurtmalar", icon: IconTruck, roles: ["admin", "founder", "ops_manager", "logistics_manager"] },
+  { href: "/finance", label: "Moliya", icon: IconWallet, roles: ["admin", "founder", "finance_manager"] },
   { href: "/leads", label: "Leadlar", icon: IconLeads },
   { href: "/pipeline", label: "Pipeline", icon: IconPipeline },
   { href: "/followups", label: "Follow-up", icon: IconFollowup },
@@ -48,7 +52,11 @@ export function Shell({ profile, children }: { profile: Profile; children: React
   }
 
   const isAdmin = profile.role === "admin" || profile.role === "founder";
-  const visibleNav = NAV.filter((item) => !item.adminOnly || isAdmin);
+  const visibleNav = NAV.filter((item) => {
+    if (item.adminOnly) return isAdmin;
+    if (item.roles) return isAdmin || item.roles.includes(profile.role);
+    return true;
+  });
 
   return (
     <div className="flex min-h-screen bg-transparent">

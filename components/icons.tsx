@@ -55,3 +55,5 @@ export const IconCopy = (p: IconProps) => base(<><rect x="9" y="9" width="13" he
 export const IconRefresh = (p: IconProps) => base(<><path d="M23 4v6h-6" /><path d="M1 20v-6h6" /><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" /></>, p);
 export const IconChart = (p: IconProps) => base(<><path d="M3 3v18h18" /><rect x="7" y="12" width="3" height="6" /><rect x="12.5" y="8" width="3" height="10" /><rect x="18" y="5" width="3" height="13" /></>, p);
 export const IconBolt = (p: IconProps) => base(<><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z" /></>, p);
+export const IconWallet = (p: IconProps) => base(<><rect x="2" y="6" width="20" height="14" rx="2" /><path d="M2 10h20" /><circle cx="17" cy="14" r="1.5" /></>, p);
+export const IconTruck = (p: IconProps) => base(<><rect x="1" y="7" width="14" height="10" rx="1" /><path d="M15 10h4l3 3v4h-7" /><circle cx="6" cy="19" r="2" /><circle cx="17" cy="19" r="2" /></>, p);

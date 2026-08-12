@@ -520,3 +520,56 @@ export interface AutomationRun {
   status: "success" | "failed";
   error: string | null;
 }
+
+// ============================================================
+// ORDERS / LOGISTICS / FINANCE (ZENTO Command Center — Phase 4)
+// ============================================================
+
+export interface OrderException {
+  source: string;
+  order_id: string;
+  seller_id: string | null;
+  title: string;
+  detail: string;
+  severity: "warning" | "critical";
+  since: string;
+}
+
+export interface LogisticsEmployeeRow {
+  employee_id: string;
+  full_name: string | null;
+  received_count?: number;
+  qc_count?: number;
+  qc_fail_count?: number;
+  packed_count?: number;
+  delivered_count?: number;
+}
+
+export interface LogisticsDashboard {
+  by_receiver: LogisticsEmployeeRow[];
+  by_qc: LogisticsEmployeeRow[];
+  by_packer: LogisticsEmployeeRow[];
+  by_courier: LogisticsEmployeeRow[];
+  stage_counts: Record<string, number>;
+}
+
+export interface FinanceOverview {
+  period_from: string;
+  period_to: string;
+  gmv: number;
+  seller_commission: number;
+  delivery_cost: number;
+  return_impact: number;
+  estimated_contribution: number;
+  not_tracked: string[];
+  note: string;
+}
+
+export const ORDER_EXCEPTION_SOURCE_LABELS_UZ: Record<string, string> = {
+  fulfillment_stuck_qc: "QC navbatida qolib ketdi",
+  qc_failed: "QC muvaffaqiyatsiz",
+  dropoff_overdue: "Topshirish muddati o'tdi",
+  courier_pickup_overdue: "Kuryer olib ketmadi",
+  return_pending: "Qaytarish kutmoqda",
+  penalty_appealed: "Jarima apellyatsiyasi",
+};
