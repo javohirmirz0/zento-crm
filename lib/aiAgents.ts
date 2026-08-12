@@ -34,5 +34,5 @@ export const LEAD_AGENTS = [
 export const ORG_AGENTS = [
   { key: "sales_analyst", label: "Sales Analyst", description: "Voronka va e'tirozlar bo'yicha trend tahlili", adminOnly: false },
   { key: "seller_intelligence", label: "Seller Intelligence", description: "Oxirgi 100 e'tiroz bo'yicha pattern tahlili", adminOnly: false },
-  { key: "ceo_digest", label: "CEO Agent", description: "Founder uchun haftalik digest", adminOnly: true },
+  { key: "ceo_digest", label: "CEO Agent", description: "Founder uchun digest — o'sish, buyurtma holati va moliya bo'yicha", adminOnly: true },
 ] as const;

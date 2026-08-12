@@ -20,6 +20,7 @@ import {
   IconTruck,
   IconBell,
   IconHistory,
+  IconChat,
 } from "./icons";
 
 const NAV = [
@@ -34,6 +35,7 @@ const NAV = [
   { href: "/pipeline", label: "Pipeline", icon: IconPipeline },
   { href: "/followups", label: "Follow-up", icon: IconFollowup },
   { href: "/economics", label: "Iqtisodiyot", icon: IconSparkles },
+  { href: "/ask", label: "Ask ZENTO", icon: IconChat },
   { href: "/notifications", label: "Bildirishnomalar", icon: IconBell },
   { href: "/activity", label: "Faoliyat jurnali", icon: IconHistory, adminOnly: true },
   { href: "/agents", label: "AI Agentlar", icon: IconSparkles, adminOnly: true },
