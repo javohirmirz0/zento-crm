@@ -44,6 +44,7 @@ const WST_NAV: NavItem[] = [
   { href: "/wst/pipeline", label: "Sotuv pipeline", icon: IconPipeline },
   { href: "/tasks/my", label: "Mening vazifalarim", icon: IconFollowup },
   { href: "/notifications", label: "Bildirishnomalar", icon: IconBell },
+  { href: "/wst/team", label: "Jamoa", icon: IconTeam },
 ];
 
 const NAV: NavItem[] = [

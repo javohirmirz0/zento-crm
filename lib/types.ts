@@ -289,6 +289,45 @@ export interface TeamMember {
   org_role: string;
 }
 
+// WST (Faza 2) — crm_organization_members.team_role qiymatlari. profiles.role
+// bilan aralashtirmaslik kerak: WST akkauntlari profiles.role'da doim
+// 'employee' bo'ladi, tashkilot ichidagi haqiqiy rol shu maydonda saqlanadi.
+export const WST_TEAM_ROLES = [
+  "owner",
+  "sales_manager",
+  "project_manager",
+  "installer",
+  "warehouse_manager",
+  "supplier_manager",
+  "service_staff",
+  "operator",
+  "hr",
+  "marketplace_manager",
+  "accountant",
+] as const;
+export type WstTeamRole = (typeof WST_TEAM_ROLES)[number];
+export const WST_TEAM_ROLE_LABELS_UZ: Record<WstTeamRole, string> = {
+  owner: "Rahbar (owner)",
+  sales_manager: "Sotuv menejeri",
+  project_manager: "Loyiha menejeri",
+  installer: "Montajchi",
+  warehouse_manager: "Ombor menejeri",
+  supplier_manager: "Ta'minot menejeri",
+  service_staff: "Xizmat ko'rsatish xodimi",
+  operator: "Operator",
+  hr: "HR",
+  marketplace_manager: "Marketpleys menejeri",
+  accountant: "Buxgalter",
+};
+
+export interface WstTeamMember {
+  id: string;
+  full_name: string | null;
+  phone: string | null;
+  org_role: string;
+  team_role: string | null;
+}
+
 // ============================================================
 // TASK SYSTEM (ZENTO Command Center — Phase 0/1)
 // ============================================================
