@@ -187,6 +187,7 @@ export interface Profile {
   role: string;
   phone: string | null;
   avatar_url?: string | null;
+  is_platform_owner?: boolean;
 }
 
 export const CHANNEL_TYPES = ["website", "telegram", "instagram", "facebook", "manual"] as const;

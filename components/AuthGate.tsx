@@ -19,7 +19,11 @@ export function AuthGate({ children }: { children: (profile: Profile) => React.R
         router.replace("/login");
         return;
       }
-      const { data, error } = await supabase.from("profiles").select("id, full_name, role, phone, avatar_url").eq("id", user.id).single();
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("id, full_name, role, phone, avatar_url, is_platform_owner")
+        .eq("id", user.id)
+        .single();
       if (!active) return;
       if (error || !data) {
         setError("Profil topilmadi");

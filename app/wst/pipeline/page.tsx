@@ -224,7 +224,13 @@ export default function WstPipelinePage() {
     <AuthGate>
       {(profile: Profile) => (
         <Shell profile={profile}>
-          <PipelineInner />
+          {profile.is_platform_owner ? (
+            <PipelineInner />
+          ) : (
+            <div className="rounded-lg border border-white/10 bg-ink-800/60 px-4 py-3 text-sm text-ink-400">
+              Bu sahifaga faqat platforma egasi kira oladi.
+            </div>
+          )}
         </Shell>
       )}
     </AuthGate>

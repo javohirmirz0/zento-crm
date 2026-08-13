@@ -44,7 +44,7 @@ const NAV = [
   { href: "/integrations", label: "Integratsiyalar", icon: IconIntegrations },
   { href: "/team", label: "Jamoa", icon: IconTeam, adminOnly: true },
   { href: "/permissions", label: "Ruxsatlar matritsasi", icon: IconShield, adminOnly: true },
-  { href: "/wst/pipeline", label: "WST — Sotuv", icon: IconBuilding, adminOnly: true },
+  { href: "/wst/pipeline", label: "WST — Sotuv", icon: IconBuilding, platformOwnerOnly: true },
 ];
 
 function initials(name: string | null) {
@@ -79,6 +79,7 @@ export function Shell({ profile, children }: { profile: Profile; children: React
 
   const isAdmin = profile.role === "admin" || profile.role === "founder";
   const visibleNav = NAV.filter((item) => {
+    if (item.platformOwnerOnly) return !!profile.is_platform_owner;
     if (item.adminOnly) return isAdmin;
     if (item.roles) return isAdmin || item.roles.includes(profile.role);
     return true;
