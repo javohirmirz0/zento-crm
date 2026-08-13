@@ -67,6 +67,7 @@ const NAV: NavItem[] = [
   { href: "/team", label: "Jamoa", icon: IconTeam, adminOnly: true },
   { href: "/permissions", label: "Ruxsatlar matritsasi", icon: IconShield, adminOnly: true },
   { href: "/wst/pipeline", label: "WST — Sotuv", icon: IconBuilding, platformOwnerOnly: true },
+  { href: "/wst/team", label: "WST — Jamoa", icon: IconTeam, platformOwnerOnly: true },
 ];
 
 function initials(name: string | null) {
