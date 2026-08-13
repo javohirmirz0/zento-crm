@@ -188,6 +188,10 @@ export interface Profile {
   phone: string | null;
   avatar_url?: string | null;
   is_platform_owner?: boolean;
+  // Faza 2 (WST): foydalanuvchi a'zo bo'lgan crm_organizations id'lari.
+  // Buning yordamida faqat WST'ga a'zo (ZENTO'ga emas, platforma egasi ham
+  // emas) akkauntlar uchun butunlay alohida, WST-only qobiq ko'rsatiladi.
+  org_ids?: string[];
 }
 
 export const CHANNEL_TYPES = ["website", "telegram", "instagram", "facebook", "manual"] as const;

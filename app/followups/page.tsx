@@ -60,7 +60,7 @@ function FollowupsInner({ profile }: { profile: Profile }) {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-xl font-semibold text-white">Follow-up va Command Center</h1>
+        <h1 className="text-xl font-semibold text-white">Follow-up va Management Center</h1>
         <p className="text-sm text-ink-400">Bugungi vazifalar, muddati o'tgan follow-uplar va qizil signal sellerlar</p>
       </div>
 

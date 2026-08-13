@@ -25,7 +25,28 @@ import {
   IconBuilding,
 } from "./icons";
 
-const NAV = [
+// Faza 2 (WST): tashkilot ID'lari. WST-only akkauntlar (platforma egasi
+// emas, ZENTO'ga a'zo emas, faqat WST'ga a'zo) uchun butunlay alohida,
+// ZENTO'siz qobiq ko'rsatiladi — pastdagi WST_NAV va WST_SHELL orqali.
+const ZENTO_ORG_ID = "3cbb2145-29e1-4b11-a333-5821d7b2e695";
+const WST_ORG_ID = "18bc3231-4887-453b-b98f-8c82954d6135";
+
+type NavItem = {
+  href: string;
+  label: string;
+  icon: (p: React.SVGProps<SVGSVGElement>) => React.JSX.Element;
+  adminOnly?: boolean;
+  roles?: string[];
+  platformOwnerOnly?: boolean;
+};
+
+const WST_NAV: NavItem[] = [
+  { href: "/wst/pipeline", label: "Sotuv pipeline", icon: IconPipeline },
+  { href: "/tasks/my", label: "Mening vazifalarim", icon: IconFollowup },
+  { href: "/notifications", label: "Bildirishnomalar", icon: IconBell },
+];
+
+const NAV: NavItem[] = [
   { href: "/", label: "CEO Dashboard", icon: IconDashboard },
   { href: "/tasks", label: "Vazifalar", icon: IconCheck },
   { href: "/tasks/my", label: "Mening vazifalarim", icon: IconFollowup },
@@ -78,7 +99,14 @@ export function Shell({ profile, children }: { profile: Profile; children: React
   }, [pathname]);
 
   const isAdmin = profile.role === "admin" || profile.role === "founder";
-  const visibleNav = NAV.filter((item) => {
+  const orgIds = profile.org_ids || [];
+  // Faqat WST'ga a'zo (ZENTO'ga emas, platforma egasi ham emas) akkauntlar
+  // uchun — ZENTO'ning hech qanday bo'limi ko'rinmaydi, faqat WST bilan
+  // bog'liq narsalar.
+  const isWstOnly = !profile.is_platform_owner && orgIds.includes(WST_ORG_ID) && !orgIds.includes(ZENTO_ORG_ID);
+  const activeNav: NavItem[] = isWstOnly ? WST_NAV : NAV;
+  const visibleNav = activeNav.filter((item) => {
+    if (isWstOnly) return true;
     if (item.platformOwnerOnly) return !!profile.is_platform_owner;
     if (item.adminOnly) return isAdmin;
     if (item.roles) return isAdmin || item.roles.includes(profile.role);
@@ -90,11 +118,13 @@ export function Shell({ profile, children }: { profile: Profile; children: React
       <aside className="flex w-64 shrink-0 flex-col border-r border-white/[0.06] bg-ink-900/70 backdrop-blur-xl">
         <div className="flex items-center gap-2.5 px-5 py-6">
           <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-gradient text-sm font-bold text-white shadow-glow">
-            Z
+            {isWstOnly ? "W" : "Z"}
           </div>
           <div>
-            <div className="text-sm font-semibold tracking-wide text-white">ZENTO COMMAND CENTER</div>
-            <div className="text-[11px] text-ink-400">Business Operating System</div>
+            <div className="text-sm font-semibold tracking-wide text-white">
+              {isWstOnly ? "WST" : "ZENTO MANAGEMENT CENTER"}
+            </div>
+            <div className="text-[11px] text-ink-400">{isWstOnly ? "Sotuv va operatsiyalar" : "Business Operating System"}</div>
           </div>
         </div>
         <nav className="flex-1 space-y-1 px-3">

@@ -136,7 +136,7 @@ function DashboardInner({ profile }: { profile: Profile }) {
               Bugun qilishingiz kerak bo'lgan {center.top_tasks.length} ta ish
             </h2>
             <Link href="/followups" className="text-xs font-medium text-brand-300 hover:underline">
-              Command Center →
+              Management Center →
             </Link>
           </div>
           <div className="space-y-2">

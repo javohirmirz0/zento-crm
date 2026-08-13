@@ -30,6 +30,11 @@ export function AuthGate({ children }: { children: (profile: Profile) => React.R
         setLoading(false);
         return;
       }
+      const { data: memberships } = await supabase
+        .from("crm_organization_members")
+        .select("organization_id")
+        .eq("user_id", user.id);
+      const org_ids = (memberships || []).map((m: { organization_id: string }) => m.organization_id);
       const allowedRoles = [
         "admin",
         "founder",
@@ -45,7 +50,7 @@ export function AuthGate({ children }: { children: (profile: Profile) => React.R
         setLoading(false);
         return;
       }
-      setProfile(data as Profile);
+      setProfile({ ...(data as Profile), org_ids });
       setLoading(false);
     }
     load();

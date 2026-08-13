@@ -222,17 +222,20 @@ function PipelineInner() {
 export default function WstPipelinePage() {
   return (
     <AuthGate>
-      {(profile: Profile) => (
-        <Shell profile={profile}>
-          {profile.is_platform_owner ? (
-            <PipelineInner />
-          ) : (
-            <div className="rounded-lg border border-white/10 bg-ink-800/60 px-4 py-3 text-sm text-ink-400">
-              Bu sahifaga faqat platforma egasi kira oladi.
-            </div>
-          )}
-        </Shell>
-      )}
+      {(profile: Profile) => {
+        const canView = !!profile.is_platform_owner || (profile.org_ids || []).includes(WST_ORG_ID);
+        return (
+          <Shell profile={profile}>
+            {canView ? (
+              <PipelineInner />
+            ) : (
+              <div className="rounded-lg border border-white/10 bg-ink-800/60 px-4 py-3 text-sm text-ink-400">
+                Bu sahifaga faqat WST jamoasi yoki platforma egasi kira oladi.
+              </div>
+            )}
+          </Shell>
+        );
+      }}
     </AuthGate>
   );
 }
